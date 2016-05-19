@@ -1,32 +1,51 @@
 package com.example.android.airfarescanner;
 
 
+import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.view.View;
+import android.widget.DatePicker;
+import android.widget.EditText;
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private Toolbar toolbar;
+    private EditText departDatetxt;
+    private EditText arriveDatetxt;
+
+    private DatePickerDialog departDatePickerDialog;
+    private DatePickerDialog arriveDatePickerDialog;
+    private SimpleDateFormat dateFormatter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        dateFormatter=new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+        findViewsById();
+
+        setDateTimeField();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -39,6 +58,50 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
+    }
+    private void findViewsById() {
+        departDatetxt = (EditText) findViewById(R.id.departDateText);
+        departDatetxt.setInputType(InputType.TYPE_NULL);
+        departDatetxt.requestFocus();
+
+        arriveDatetxt = (EditText) findViewById(R.id.arriveDateText);
+        arriveDatetxt.setInputType(InputType.TYPE_NULL);
+    }
+
+    private void setDateTimeField() {
+        departDatetxt.setOnClickListener(this);
+        arriveDatetxt.setOnClickListener(this);
+
+        Calendar newCalendar = Calendar.getInstance();
+        departDatePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, monthOfYear, dayOfMonth);
+                departDatetxt.setText(dateFormatter.format(newDate.getTime()));
+            }
+
+        },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+
+        arriveDatePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, monthOfYear, dayOfMonth);
+                arriveDatetxt.setText(dateFormatter.format(newDate.getTime()));
+            }
+
+        },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+    }
+
+
+    @Override
+    public void onClick(View view) {
+        if(view == departDatetxt) {
+            departDatePickerDialog.show();
+        } else if(view == arriveDatetxt) {
+            arriveDatePickerDialog.show();
+        }
     }
 
     private void setupViewPager(ViewPager viewPager) {
