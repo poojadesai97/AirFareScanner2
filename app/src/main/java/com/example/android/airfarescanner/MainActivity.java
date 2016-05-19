@@ -1,82 +1,125 @@
 package com.example.android.airfarescanner;
 
-
-import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.text.InputType;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.view.View;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.Spinner;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 
-import java.util.ArrayList;
-import java.util.List;
+public class MainActivity extends Activity implements View.OnClickListener {
+private EditText departDatetxt;
+    private EditText arriveDatetxt;
 
+    private DatePickerDialog departDatePickerDialog;
+    private DatePickerDialog arriveDatePickerDialog;
+    private SimpleDateFormat dateFormatter;
 
-public class MainActivity extends AppCompatActivity {
-
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-    private Toolbar toolbar;
-
+    Button search;
+    public static final String LOG_TAG = "AirFareScanner";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        dateFormatter=new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+        findViewsById();
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setDateTimeField();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);*/
+        search = (Button) findViewById(R.id.button);
+        Log.e(LOG_TAG, "Main Activity");
 
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+// Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.dropdown_array, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
 
+
+        Spinner adultno = (Spinner) findViewById(R.id.adultsCount);
+// Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this,
+                R.array.number, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+        adultno.setAdapter(adapter1);
+
+        Spinner childno = (Spinner) findViewById(R.id.childCount);
+// Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this,
+                R.array.number, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+        childno.setAdapter(adapter2);
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e(LOG_TAG, "Search Clicked");
+                Intent intent = new Intent(MainActivity.this, ResultMainActivity.class);
+                startActivity(intent);
+
+
+            }
+        });
     }
 
-    private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new OneFragment(), "Cheapest");
-        adapter.addFragment(new TwoFragment(), "Quickest");
-        viewPager.setAdapter(adapter);
+    private void findViewsById() {
+        departDatetxt = (EditText) findViewById(R.id.departDateText);
+        departDatetxt.setInputType(InputType.TYPE_NULL);
+        departDatetxt.requestFocus();
+
+        arriveDatetxt = (EditText) findViewById(R.id.arriveDateText);
+        arriveDatetxt.setInputType(InputType.TYPE_NULL);
     }
 
-    class ViewPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
+    private void setDateTimeField() {
+        departDatetxt.setOnClickListener(this);
+        arriveDatetxt.setOnClickListener(this);
 
-        public ViewPagerAdapter(FragmentManager manager) {
-            super(manager);
-        }
+        Calendar newCalendar = Calendar.getInstance();
+        departDatePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
 
-        @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
-        }
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, monthOfYear, dayOfMonth);
+                departDatetxt.setText(dateFormatter.format(newDate.getTime()));
+            }
 
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
-        }
+        },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
 
-        public void addFragment(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
+        arriveDatePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
 
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
-        }
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, monthOfYear, dayOfMonth);
+                arriveDatetxt.setText(dateFormatter.format(newDate.getTime()));
+            }
+
+        },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -85,17 +128,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    public void onClick(View view) {
+        if(view == departDatetxt) {
+            departDatePickerDialog.show();
+        } else if(view == arriveDatetxt) {
+            arriveDatePickerDialog.show();
         }
-
-        return super.onOptionsItemSelected(item);
     }
+
+
 }
