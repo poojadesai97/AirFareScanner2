@@ -1,24 +1,4 @@
 <resources>
     <string name="app_name">AirFareScanner</string>
     <string name="action_settings">Settings</string>
-    <string-array name="dropdown_array">
-        <item>Economy Class</item>
-        <item>Premium Economy</item>
-        <item>Business Class</item>
-        <item>First Class</item>
-    </string-array>
-    <string-array name="number">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-        <item>9</item>
-        <item>10</item>
-    </string-array>
-    <string name="result_activity_detail">Details</string>
 </resources>
-
