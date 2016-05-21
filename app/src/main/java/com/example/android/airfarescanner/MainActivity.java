@@ -31,6 +31,11 @@ private EditText departDatetxt;
     private DatePickerDialog departDatePickerDialog;
     private DatePickerDialog arriveDatePickerDialog;
     private SimpleDateFormat dateFormatter;
+    private EditText fromAirport;
+    private EditText toAirport;
+    private Spinner adultsCount;
+    private Spinner childrensCount;
+    private Spinner travelClass;
 
     Button search;
     public static final String LOG_TAG = "AirFareScanner";
@@ -38,6 +43,11 @@ private EditText departDatetxt;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        fromAirport = (EditText)findViewById(R.id.fromAirport);
+        toAirport = (EditText) findViewById(R.id.toAirport);
+        adultsCount = (Spinner)findViewById(R.id.adultsCount);
+        childrensCount = (Spinner)findViewById(R.id.childCount);
+        travelClass = (Spinner) findViewById(R.id.spinner);
         dateFormatter=new SimpleDateFormat("dd-MM-yyyy", Locale.US);
         findViewsById();
 
@@ -62,7 +72,7 @@ private EditText departDatetxt;
         Spinner adultno = (Spinner) findViewById(R.id.adultsCount);
 // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this,
-                R.array.number, android.R.layout.simple_spinner_item);
+                R.array.adultNumber, android.R.layout.simple_spinner_item);
 // Specify the layout to use when the list of choices appears
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 // Apply the adapter to the spinner
@@ -71,7 +81,7 @@ private EditText departDatetxt;
         Spinner childno = (Spinner) findViewById(R.id.childCount);
 // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this,
-                R.array.number, android.R.layout.simple_spinner_item);
+                R.array.childNumber, android.R.layout.simple_spinner_item);
 // Specify the layout to use when the list of choices appears
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 // Apply the adapter to the spinner
@@ -80,6 +90,14 @@ private EditText departDatetxt;
             @Override
             public void onClick(View view) {
                 Log.e(LOG_TAG, "Search Clicked");
+                Log.e(LOG_TAG, "From " + fromAirport.getText() );
+                Log.e(LOG_TAG, "To " + toAirport.getText());
+                Log.e(LOG_TAG, "Adult Count :" + adultsCount.getSelectedItem().toString());
+                Log.e(LOG_TAG, "Child Count : "+ childrensCount.getSelectedItem().toString());
+                Log.e(LOG_TAG, "Depart Date : " + departDatetxt.getText());
+                Log.e(LOG_TAG, "Arrive Date :" + arriveDatetxt.getText());
+
+
                 Intent intent = new Intent(MainActivity.this, ResultMainActivity.class);
                 startActivity(intent);
 
