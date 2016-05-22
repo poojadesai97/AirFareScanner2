@@ -2,6 +2,7 @@ package com.example.android.airfarescanner;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.os.Parcelable;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.View;
@@ -17,8 +18,10 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -89,6 +92,14 @@ private EditText departDatetxt;
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String from = fromAirport.getText().toString();
+                String to = toAirport.getText().toString();
+                String arriveDate = arriveDatetxt.getText().toString();
+                String departDate = departDatetxt.getText().toString();
+                int adult = Integer.parseInt(adultsCount.getSelectedItem().toString());
+                int children = Integer.parseInt(childrensCount.getSelectedItem().toString());
+                String cabin = travelClass.getSelectedItem().toString();
+
                 Log.e(LOG_TAG, "Search Clicked");
                 Log.e(LOG_TAG, "From " + fromAirport.getText() );
                 Log.e(LOG_TAG, "To " + toAirport.getText());
@@ -97,9 +108,18 @@ private EditText departDatetxt;
                 Log.e(LOG_TAG, "Depart Date : " + departDatetxt.getText());
                 Log.e(LOG_TAG, "Arrive Date :" + arriveDatetxt.getText());
 
-
-                Intent intent = new Intent(MainActivity.this, ResultMainActivity.class);
-                startActivity(intent);
+                if(from.isEmpty())
+                    Toast.makeText(getApplicationContext(),"Invalid Departure Airport", Toast.LENGTH_LONG).show();
+                else if(to.isEmpty())
+                    Toast.makeText(getApplicationContext(),"Invalid Detination Airport ", Toast.LENGTH_LONG).show();
+                else if(departDate.isEmpty())
+                    Toast.makeText(getApplicationContext(),"Please select Departure Date", Toast.LENGTH_LONG).show();
+                else {
+                    searchPojo search = new searchPojo(from, to, departDate, arriveDate, adult, children, cabin);
+                    Intent intent = new Intent(MainActivity.this, ResultMainActivity.class);
+                    intent.putExtra("searchPojo", search);
+                    startActivity(intent);
+                }
 
 
             }
