@@ -21,6 +21,7 @@ public class ResultMainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private Toolbar toolbar;
+    searchPojo search;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

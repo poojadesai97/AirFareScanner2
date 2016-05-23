@@ -2,12 +2,56 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="1">
+
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
-        android:text="New Text"
-        android:id="@+id/item_text"
-        android:layout_gravity="center_horizontal" />
+        android:layout_width="88dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Airline"
+        android:id="@+id/airlineText" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.02">
+
+        <TextView
+            android:layout_width="68dp"
+            android:layout_height="49dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Depart Time"
+            android:id="@+id/departTime" />
+
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="48dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Depart Airport"
+            android:id="@+id/departAirport" />
+
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="43dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Travel Time"
+            android:id="@+id/travelTime" />
+
+        <TextView
+            android:layout_width="94dp"
+            android:layout_height="43dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Arrival Airport"
+            android:id="@+id/arrivalAirport" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Arrival Time"
+            android:id="@+id/arrivalTime" />
+    </LinearLayout>
 </LinearLayout>
