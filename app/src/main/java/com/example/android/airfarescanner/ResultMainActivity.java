@@ -13,7 +13,11 @@ import android.support.v4.app.FragmentManager;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class ResultMainActivity extends AppCompatActivity {
@@ -43,8 +47,25 @@ public class ResultMainActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new OneFragment(), "Cheapest");
-        adapter.addFragment(new TwoFragment(), "Quickest");
+        ArrayList<HashMap<String, String>> cheapestList = (ArrayList<HashMap<String, String>>) getIntent().getSerializableExtra("List");
+        ArrayList<HashMap<String, String>> quickestList = new ArrayList<HashMap<String, String>>();
+        Collections.sort(quickestList, new MapComparator("duration"));
+
+        Fragment cheapest = new OneFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("cheapestList", cheapestList);
+
+        cheapest.setArguments(bundle);
+        Fragment quickest = new OneFragment();
+        Bundle quickestbundle = new Bundle();
+        bundle.putSerializable("quickestList", cheapestList);
+
+        quickest.setArguments(quickestbundle);
+
+
+        adapter.addFragment(cheapest, "Cheapest");
+        adapter.addFragment(quickest, "Quickest");
+
         viewPager.setAdapter(adapter);
     }
 
@@ -97,5 +118,23 @@ public class ResultMainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    class MapComparator implements Comparator<Map<String, String>>
+    {
+        private final String key;
+
+        public MapComparator(String key)
+        {
+            this.key = key;
+        }
+
+        public int compare(Map<String, String> first,
+                           Map<String, String> second)
+        {
+            // TODO: Null checking, both for maps and values
+            String firstValue = first.get(key);
+            String secondValue = second.get(key);
+            return firstValue.compareTo(secondValue);
+        }
     }
 }
