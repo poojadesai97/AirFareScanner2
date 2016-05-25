@@ -27,7 +27,7 @@ public class searchPojo implements Serializable{
         this.arriveDate = arriveDate;
         this.adultCount = adultCount;
         this.childrenCount = childrenCount;
-        TravelClass = travelClass;
+        this.TravelClass = QPXClass(travelClass);
     }
 
     public String getFromAirport() {
@@ -83,6 +83,29 @@ public class searchPojo implements Serializable{
     }
 
     public void setTravelClass(String travelClass) {
-        TravelClass = travelClass;
+        TravelClass = QPXClass(travelClass);
+    }
+
+    public String QPXClass(String travelClass) {
+        String qpxClass = "";
+
+        switch(travelClass) {
+            case "Economy Class":
+                qpxClass ="COACH";
+                break;
+            case "Premium Economy":
+                qpxClass = "PREMIUM_COACH";
+                break;
+            case "Business Class":
+                qpxClass = "BUSINESS";
+                break;
+            case "First Class":
+                qpxClass ="FIRST";
+                break;
+            default:
+                qpxClass="COACH";
+                break;
+        }
+        return qpxClass;
     }
 }

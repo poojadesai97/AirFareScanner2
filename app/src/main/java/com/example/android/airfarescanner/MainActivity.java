@@ -45,6 +45,7 @@ import com.google.api.services.qpxExpress.model.TripsSearchResponse;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -233,12 +234,14 @@ private EditText departDatetxt;
                 httpTransport = com.google.api.client.extensions.android.http.AndroidHttp.newCompatibleTransport();
                 PassengerCounts passengers = new PassengerCounts();
                 passengers.setAdultCount(searchObject.getAdultCount());
+                passengers.setChildCount(searchObject.getChildrenCount());
 
                 List<SliceInput> slices = new ArrayList<SliceInput>();
                 SliceInput slice = new SliceInput();
                 slice.setOrigin(searchObject.getFromAirport());
                 slice.setDestination(searchObject.getDestinationAirport());
                 slice.setDate(searchObject.getDepartDate());
+                slice.setPreferredCabin(searchObject.getTravelClass());
                 slices.add(slice);
 
                 if (!searchObject.getArriveDate().isEmpty()) {
@@ -246,6 +249,7 @@ private EditText departDatetxt;
                     slice.setOrigin(searchObject.getDestinationAirport());
                     slice.setDestination(searchObject.getFromAirport());
                     slice.setDate(searchObject.getArriveDate());
+                    slice.setPreferredCabin(searchObject.getTravelClass());
                     slices.add(slice);
                 }
                 TripOptionsRequest request = new TripOptionsRequest();
@@ -264,9 +268,10 @@ private EditText departDatetxt;
 
                 String id;
 
+
                 for(int i=0; i<tripResults.size(); i++){
                     tripPojo trip = new tripPojo();
-
+                    double price = 0;
                     System.out.println("Trip Size: "+ tripResults.size());
                     //Trip Option ID
                     id= tripResults.get(i).getId();
@@ -275,10 +280,23 @@ private EditText departDatetxt;
                     //Pricing
                     List<PricingInfo> priceInfo= tripResults.get(i).getPricing();
                     for(int p=0; p<priceInfo.size(); p++){
-                        String price= priceInfo.get(p).getSaleTotal();
-                        System.out.println("Price "+price);
-                        trip.setPrice(price);
+                        String priceString [] = priceInfo.get(p).getSaleTotal().split("USD");
+                        double personPrice = Double.parseDouble(priceString[1]);
+                        if (p == 0) {
+                            personPrice *= searchObject.getAdultCount();
+                        } else {
+                            personPrice *= searchObject.getChildrenCount();
+                        }
+
+                        price += personPrice;
+
                     }
+                    System.out.println("Price "+price);
+                    Double truncatedprice = new BigDecimal(price)
+                            .setScale(2, BigDecimal.ROUND_HALF_UP)
+                            .doubleValue();
+
+                    trip.setPrice(String.valueOf(truncatedprice));
                     trip.setOrigin(searchObject.getFromAirport());
                     trip.setDestination(searchObject.getDestinationAirport());
                     //Slice
