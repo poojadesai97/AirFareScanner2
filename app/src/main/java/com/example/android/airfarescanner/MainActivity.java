@@ -43,6 +43,7 @@ import com.google.api.services.qpxExpress.model.TripOptionsRequest;
 import com.google.api.services.qpxExpress.model.TripsSearchRequest;
 import com.google.api.services.qpxExpress.model.TripsSearchResponse;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -203,7 +204,7 @@ private EditText departDatetxt;
             arriveDatePickerDialog.show();
         }
     }
-    class FetchAirFareTask extends AsyncTask<String, Void, ArrayList<HashMap<String, String>>> {
+    class FetchAirFareTask extends AsyncTask<String, Void, ArrayList<tripPojo>> {
         public static final String LOG_TAG = "fetchairfaretask";
 
         @Override
@@ -214,9 +215,9 @@ private EditText departDatetxt;
         }
 
         @Override
-        protected ArrayList<HashMap<String, String>> doInBackground(String... params) {
-            ArrayList<HashMap<String, String>> inboxList;
-            inboxList = new ArrayList<HashMap<String, String>>();
+        protected ArrayList<tripPojo> doInBackground(String... params) {
+            ArrayList<tripPojo> tripList;
+            tripList = new ArrayList<tripPojo>();
 
 
             // adding each child node to HashMap key => value
@@ -239,6 +240,14 @@ private EditText departDatetxt;
                 slice.setDestination(searchObject.getDestinationAirport());
                 slice.setDate(searchObject.getDepartDate());
                 slices.add(slice);
+
+                if (!searchObject.getArriveDate().isEmpty()) {
+                    slice = new SliceInput();
+                    slice.setOrigin(searchObject.getDestinationAirport());
+                    slice.setDestination(searchObject.getFromAirport());
+                    slice.setDate(searchObject.getArriveDate());
+                    slices.add(slice);
+                }
                 TripOptionsRequest request = new TripOptionsRequest();
                 request.setSolutions(50);
                 request.setPassengers(passengers);
@@ -251,68 +260,137 @@ private EditText departDatetxt;
                         .setGoogleClientRequestInitializer(new QPXExpressRequestInitializer("AIzaSyDOU4p-DF9EB6tYKo4-KGRubiYdA76W2h4")).build();
 
                 TripsSearchResponse list = qpXExpress.trips().search(parameters).execute();
-                List<TripOption> tripResults = list.getTrips().getTripOption();
-                Log.e(LOG_TAG, String.valueOf(tripResults.size()));
-                for (int i = 0; i < tripResults.size(); i++) {
-                    HashMap<String, String> map = new HashMap<String, String>();
+                List<TripOption> tripResults=list.getTrips().getTripOption();
 
-                    List<PricingInfo> priceInfo = tripResults.get(i).getPricing();
-                    for (int p = 0; p < priceInfo.size(); p++) {
-                        String price = priceInfo.get(p).getSaleTotal();
-                        map.put("price", price);
-                        //System.out.println("Price "+price);
+                String id;
+
+                for(int i=0; i<tripResults.size(); i++){
+                    tripPojo trip = new tripPojo();
+
+                    System.out.println("Trip Size: "+ tripResults.size());
+                    //Trip Option ID
+                    id= tripResults.get(i).getId();
+                    System.out.println("id "+id);
+                    trip.setId(id);
+                    //Pricing
+                    List<PricingInfo> priceInfo= tripResults.get(i).getPricing();
+                    for(int p=0; p<priceInfo.size(); p++){
+                        String price= priceInfo.get(p).getSaleTotal();
+                        System.out.println("Price "+price);
+                        trip.setPrice(price);
                     }
-                    List<SliceInfo> sliceInfo = tripResults.get(i).getSlice();
-                    for (int j = 0; j < sliceInfo.size(); j++) {
-                        int duration = sliceInfo.get(j).getDuration();
-                        map.put("departAirport", searchObject.getFromAirport());
-                        map.put("duration", String.valueOf(duration));
-                        map.put("travelTime", "" + duration / 60 + " h " + duration % 60 + " m");
-                        map.put("arrivalAirport", searchObject.getDestinationAirport());
-                        Log.e(LOG_TAG, String.valueOf(duration));
-                        List<SegmentInfo> segInfo = sliceInfo.get(j).getSegment();
-                        for (int k = 0; k < segInfo.size(); k++) {
-                            FlightInfo flightInfo=segInfo.get(k).getFlight();
-                            map.put("airline", flightInfo.getCarrier());
-                            List<LegInfo> leg=segInfo.get(k).getLeg();
-                            String departDateTime=leg.get(0).getDepartureTime();
-                            String dateTime[] = departDateTime.split("T");
-                            String departtime[] = dateTime[1].split("\\+");
+                    trip.setOrigin(searchObject.getFromAirport());
+                    trip.setDestination(searchObject.getDestinationAirport());
+                    //Slice
+                    List<SliceInfo> sliceinfo= tripResults.get(i).getSlice();
+                    ArrayList<sliceInfo> slice_info = new ArrayList<sliceInfo>();
+                    System.out.println("Slices Size: "+ sliceinfo.size());
+                    int totalDuration = 0;
+                    for(int j=0; j<sliceinfo.size(); j++){
+                        sliceInfo sInfo = new sliceInfo();
 
-                            map.put("departTime", departtime[0]);
-                            String ArrivalTime = leg.get(leg.size()-1).getArrivalTime();
-                            dateTime = ArrivalTime.split("T");
-                            String arrivaltime[] = dateTime[1].split("\\+");
-                            map.put("arrivalTime", arrivaltime[0]);
-                            /*for(int l=0; l<leg.size(); l++){
-                                String departTime=leg.get(0).getDepartureTime();
-                                map.put("departTime", departTime);
-                                String ArrivalTime = leg.get(leg.size()-1).getArrivalTime();
-                                map.put("arrivalTime", ArrivalTime);
-                            }*/
+                        String duration= sliceinfo.get(j).getDuration().toString();
+                        System.out.println("duration "+duration);
+                        sInfo.setDuration(duration);
+                        totalDuration += Integer.parseInt(duration);
+                        sInfo.setTravelTime("" + Integer.parseInt(duration) / 60 + " h " + Integer.parseInt(duration) % 60 + " m");
+                        List<SegmentInfo> seginfo= sliceinfo.get(j).getSegment();
+                        ArrayList<segInfo> seg_info = new ArrayList<segInfo>();
+                        for(int k=0; k<seginfo.size(); k++){
+                            segInfo seInfo = new segInfo();
+                            String bookingCode= seginfo.get(k).getBookingCode();
+                            System.out.println("bookingCode "+bookingCode);
+                            seInfo.setBookingCode(bookingCode);
+                            FlightInfo flightInfo=seginfo.get(k).getFlight();
+                            String flightNum= flightInfo.getNumber();
+                            System.out.println("flightNum "+flightNum);
+                            seInfo.setFlightNum(flightNum);
+                            String flightCarrier= flightInfo.getCarrier();
+                            System.out.println("flightCarrier "+flightCarrier);
+                            seInfo.setFlightCarrier(flightCarrier);
+                            List<LegInfo> leg=seginfo.get(k).getLeg();
+                            ArrayList<legInfo> leg_info = new ArrayList<legInfo>();
+                            for(int l=0; l<leg.size(); l++){
+                                legInfo lInfo = new legInfo();
+                                String aircraft= leg.get(l).getAircraft();
+                                System.out.println("aircraft "+aircraft);
+                                lInfo.setAircraft(aircraft);
+                                String arrivalTime= leg.get(l).getArrivalTime();
+                                String dateTime[] = arrivalTime.split("T");
+                                String arrivaltime[] ;
+                                if (dateTime[1].contains("+")) {
+                                    arrivaltime = dateTime[1].split("\\+");
+                                }else {
+                                    arrivaltime = dateTime[1].split("\\-");
+                                }
+                                System.out.println("arrivalTime "+arrivaltime[0]);
+                                lInfo.setArrivalTime(arrivaltime[0]);
+                                String departDateTime=leg.get(l).getDepartureTime();
+                                 dateTime = departDateTime.split("T");
+                                String departtime[];
+                                if (dateTime[1].contains("+")) {
+                                    departtime = dateTime[1].split("\\+");
+                                }else {
+                                    departtime = dateTime[1].split("\\-");
+                                }
+
+                                lInfo.setDepartTime(departtime[0]);
+                                System.out.println("departTime "+departtime[0]);
+                                String dest=leg.get(l).getDestination();
+                                lInfo.setDest(dest);
+                                System.out.println("Destination "+dest);
+                                String destTer= leg.get(l).getDestinationTerminal();
+                                lInfo.setDestTer(destTer);
+                                System.out.println("DestTer "+destTer);
+                                String origin=leg.get(l).getOrigin();
+                                lInfo.setOrigin(origin);
+                                System.out.println("origun "+origin);
+                                String originTer=leg.get(l).getOriginTerminal();
+                                lInfo.setOriginTer(originTer);
+                                System.out.println("OriginTer "+originTer);
+                                int durationLeg= leg.get(l).getDuration();
+                                lInfo.setDurationLeg(String.valueOf(durationLeg));
+                                System.out.println("durationleg "+durationLeg);
+                                int mil= leg.get(l).getMileage();
+                                lInfo.setMil(String.valueOf(mil));
+                                System.out.println("Milleage "+mil);
+                                leg_info.add(lInfo);
+
+                            }
+                            seInfo.setLeg_info(leg_info);
+                            seg_info.add(seInfo);
+
                         }
+                        sInfo.setSeg_info(seg_info);
+                        slice_info.add(sInfo);
 
                     }
+                    trip.setSlice_info(slice_info);
+                    trip.setTotalDuration(String.valueOf(totalDuration));
+                    tripList.add(trip);
 
-                    inboxList.add(map);
+
+
+
                 }
-            }catch (Exception e) {
-                Log.e(LOG_TAG, "Exception" +e.toString());
-                e.printStackTrace();
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
+            } catch (Throwable t) {
+                t.printStackTrace();
             }
-            return inboxList;
+            return tripList;
 
         }
 
         @Override
-        protected void onPostExecute(ArrayList<HashMap<String, String>> list) {
+        protected void onPostExecute(ArrayList<tripPojo> list) {
             super.onPostExecute(list);
             Intent intent = new Intent(MainActivity.this, ResultMainActivity.class);
             intent.putExtra("List", list);
             startActivity(intent);
             /*adapter = new SimpleAdapter(
                     getActivity(), list,
-                    R.layout.airlines_list, new String[]{"airline", "departAirport", "departTime", "travelTime", "arrivalAirport", "arrivalTime", "price"},
+                    R.layout.cheapest_list_item, new String[]{"airline", "departAirport", "departTime", "travelTime", "arrivalAirport", "arrivalTime", "price"},
                     new int[]{R.id.airlineText, R.id.departAirport, R.id.departTime, R.id.travelTime, R.id.arrivalAirport, R.id.arrivalTime, R.id.price});
 
             listView.setAdapter(adapter);

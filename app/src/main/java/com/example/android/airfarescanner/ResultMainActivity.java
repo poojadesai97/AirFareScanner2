@@ -1,11 +1,15 @@
 package com.example.android.airfarescanner;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.app.Fragment;
@@ -14,10 +18,7 @@ import android.support.v4.app.FragmentManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class ResultMainActivity extends AppCompatActivity {
@@ -25,7 +26,6 @@ public class ResultMainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private Toolbar toolbar;
-    searchPojo search;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,27 +47,32 @@ public class ResultMainActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        ArrayList<HashMap<String, String>> cheapestList = (ArrayList<HashMap<String, String>>) getIntent().getSerializableExtra("List");
-        ArrayList<HashMap<String, String>> quickestList = new ArrayList<HashMap<String, String>>();
-        Collections.sort(quickestList, new MapComparator("duration"));
+        Bundle extras = getIntent().getExtras();
+        ArrayList<tripPojo> resultList = null;
+        if (extras != null) {
+            resultList = (ArrayList<tripPojo>) extras.getSerializable("List");
+        }
+        Log.e("resultactivity", "List size : " + resultList.size());
 
-        Fragment cheapest = new OneFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("cheapestList", cheapestList);
+        bundle.putSerializable("cheapest", resultList);
+        CheapestFragment cheapestfragment = new CheapestFragment();
+        cheapestfragment.setArguments(bundle);
 
-        cheapest.setArguments(bundle);
-        Fragment quickest = new OneFragment();
-        Bundle quickestbundle = new Bundle();
-        bundle.putSerializable("quickestList", cheapestList);
+        adapter.addFragment(cheapestfragment, "Cheapest");
 
-        quickest.setArguments(quickestbundle);
-
-
-        adapter.addFragment(cheapest, "Cheapest");
-        adapter.addFragment(quickest, "Quickest");
+        ArrayList<tripPojo> quickestList = new ArrayList<tripPojo>(resultList);
+        //Collections.copy(quickestList, resultList);
+        bundle = new Bundle();
+        bundle.putSerializable("quickest", quickestList);
+        QuickestFragment quickestFragment = new QuickestFragment();
+        quickestFragment.setArguments(bundle);
+        adapter.addFragment(quickestFragment, "Quickest");
 
         viewPager.setAdapter(adapter);
     }
+
+
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
@@ -118,23 +123,5 @@ public class ResultMainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-    class MapComparator implements Comparator<Map<String, String>>
-    {
-        private final String key;
-
-        public MapComparator(String key)
-        {
-            this.key = key;
-        }
-
-        public int compare(Map<String, String> first,
-                           Map<String, String> second)
-        {
-            // TODO: Null checking, both for maps and values
-            String firstValue = first.get(key);
-            String secondValue = second.get(key);
-            return firstValue.compareTo(secondValue);
-        }
     }
 }
