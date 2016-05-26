@@ -70,7 +70,8 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="67dp"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:id="@+id/returnLinearLayout">
 
         <TextView
             android:layout_width="52dp"

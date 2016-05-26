@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.api.services.qpxExpress.model.LegInfo;
@@ -85,6 +86,11 @@ public class CustomAdapter extends ArrayAdapter {
             view.departTime1.setText(lInfo1.get(0).getDepartTime());
             lInfo1 = item.getSlice_info().get(i).getSeg_info().get(item.getSlice_info().get(i).getSeg_info().size() -1).getLeg_info();
             view.ArrivalTime1.setText(lInfo1.get(lInfo1.size()-1).getArrivalTime());
+        } else {
+            TextView airline_text = (TextView)rowView.findViewById(R.id.airlineText1);
+            airline_text.setVisibility(View.GONE);
+            LinearLayout layout = (LinearLayout) rowView.findViewById(R.id.returnLinearLayout);
+            layout.setVisibility(View.GONE);
         }
 
         return rowView;
