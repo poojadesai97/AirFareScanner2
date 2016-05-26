@@ -319,6 +319,9 @@ private EditText departDatetxt;
                             String bookingCode= seginfo.get(k).getBookingCode();
                             System.out.println("bookingCode "+bookingCode);
                             seInfo.setBookingCode(bookingCode);
+                            Integer connectionDuration =seginfo.get(k).getConnectionDuration();
+                            if (connectionDuration != null)
+                                seInfo.setConnectionDuration(connectionDuration);
                             FlightInfo flightInfo=seginfo.get(k).getFlight();
                             String flightNum= flightInfo.getNumber();
                             System.out.println("flightNum "+flightNum);
@@ -326,6 +329,7 @@ private EditText departDatetxt;
                             String flightCarrier= flightInfo.getCarrier();
                             System.out.println("flightCarrier "+flightCarrier);
                             seInfo.setFlightCarrier(flightCarrier);
+
                             List<LegInfo> leg=seginfo.get(k).getLeg();
                             ArrayList<legInfo> leg_info = new ArrayList<legInfo>();
                             for(int l=0; l<leg.size(); l++){

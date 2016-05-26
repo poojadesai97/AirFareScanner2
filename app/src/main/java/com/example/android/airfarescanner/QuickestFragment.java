@@ -1,5 +1,7 @@
 package com.example.android.airfarescanner;
 
+import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -8,10 +10,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -72,6 +76,26 @@ public class QuickestFragment extends Fragment {
         ql.add("one");
         adapter = new ArrayAdapter<String>(getActivity(), R.layout.airlines_list, R.id.item_text, ql);*/
         listView.setAdapter(adapter);
+        final ArrayList<tripPojo> finalQuickest = quickest;
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+/*
+                    String locationSetting = Utility.getPreferredLocation(getActivity());
+*/
+                    Intent intent = new Intent(getActivity(), DetailActivity.class);
+                            /*.setData(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
+                                    locationSetting, cursor.getLong(COL_WEATHER_DATE)
+                            ));*/
+                    intent.putExtra("detailTrip", finalQuickest.get(position));
+
+                    startActivity(intent);
+                    Toast.makeText(getActivity(), finalQuickest.get(position).getPrice(),
+                            Toast.LENGTH_SHORT).show();
+
+            }
+        });
         return rootView;
     }
 

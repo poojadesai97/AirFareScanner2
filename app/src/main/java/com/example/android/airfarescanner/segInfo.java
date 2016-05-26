@@ -11,6 +11,7 @@ public class segInfo implements Serializable {
     String bookingCode;
     String flightNum;
     String flightCarrier;
+    int connectionDuration;
     ArrayList<legInfo> leg_info;
 
     public String getBookingCode() {
@@ -43,5 +44,13 @@ public class segInfo implements Serializable {
 
     public void setLeg_info(ArrayList<legInfo> leg_info) {
         this.leg_info = leg_info;
+    }
+
+    public int getConnectionDuration() {
+        return connectionDuration;
+    }
+
+    public void setConnectionDuration(int connectionDuration) {
+        this.connectionDuration = connectionDuration;
     }
 }
