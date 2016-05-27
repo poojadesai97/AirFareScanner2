@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.android.airfarescanner"
-        minSdkVersion 10
+        minSdkVersion 11
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -30,4 +30,5 @@ dependencies {
     compile 'com.google.http-client:google-http-client-android:1.12.0-beta'
 
 
+    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
 }

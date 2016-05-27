@@ -1,10 +1,13 @@
 package com.example.android.airfarescanner;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Parcelable;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -26,6 +29,10 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -49,13 +56,14 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 
 public class MainActivity extends Activity implements View.OnClickListener {
-private EditText departDatetxt;
+    private EditText departDatetxt;
     private EditText arriveDatetxt;
 
     private DatePickerDialog departDatePickerDialog;
@@ -70,20 +78,26 @@ private EditText departDatetxt;
 
     Button search;
     public static final String LOG_TAG = "AirFareScanner";
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        fromAirport = (EditText)findViewById(R.id.fromAirport);
-        fromAirport.setFilters(new InputFilter[] {new InputFilter.AllCaps()});
+        fromAirport = (EditText) findViewById(R.id.fromAirport);
+        fromAirport.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
 
         toAirport = (EditText) findViewById(R.id.toAirport);
-        toAirport.setFilters(new InputFilter[] {new InputFilter.AllCaps()});
+        toAirport.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
 
-        adultsCount = (Spinner)findViewById(R.id.adultsCount);
-        childrensCount = (Spinner)findViewById(R.id.childCount);
+        adultsCount = (Spinner) findViewById(R.id.adultsCount);
+        childrensCount = (Spinner) findViewById(R.id.childCount);
         travelClass = (Spinner) findViewById(R.id.spinner);
-        dateFormatter=new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         findViewsById();
 
         setDateTimeField();
@@ -134,19 +148,19 @@ private EditText departDatetxt;
 
 
                 Log.e(LOG_TAG, "Search Clicked");
-                Log.e(LOG_TAG, "From " + fromAirport.getText() );
+                Log.e(LOG_TAG, "From " + fromAirport.getText());
                 Log.e(LOG_TAG, "To " + toAirport.getText());
                 Log.e(LOG_TAG, "Adult Count :" + adultsCount.getSelectedItem().toString());
-                Log.e(LOG_TAG, "Child Count : "+ childrensCount.getSelectedItem().toString());
+                Log.e(LOG_TAG, "Child Count : " + childrensCount.getSelectedItem().toString());
                 Log.e(LOG_TAG, "Depart Date : " + departDatetxt.getText());
                 Log.e(LOG_TAG, "Arrive Date :" + arriveDatetxt.getText());
 
-                if(from.isEmpty())
-                    Toast.makeText(getApplicationContext(),"Invalid Departure Airport", Toast.LENGTH_LONG).show();
-                else if(to.isEmpty())
-                    Toast.makeText(getApplicationContext(),"Invalid Detination Airport ", Toast.LENGTH_LONG).show();
-                else if(departDate.isEmpty())
-                    Toast.makeText(getApplicationContext(),"Please select Departure Date", Toast.LENGTH_LONG).show();
+                if (from.isEmpty())
+                    Toast.makeText(getApplicationContext(), "Invalid Departure Airport", Toast.LENGTH_LONG).show();
+                else if (to.isEmpty())
+                    Toast.makeText(getApplicationContext(), "Invalid Detination Airport ", Toast.LENGTH_LONG).show();
+                else if (departDate.isEmpty())
+                    Toast.makeText(getApplicationContext(), "Please select Departure Date", Toast.LENGTH_LONG).show();
                 else {
                     searchObject = new searchPojo(from, to, departDate, arriveDate, adult, children, cabin);
                     FetchAirFareTask airfareTask = new FetchAirFareTask();
@@ -157,8 +171,10 @@ private EditText departDatetxt;
 
             }
         });
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
-
 
 
     private void findViewsById() {
@@ -170,41 +186,99 @@ private EditText departDatetxt;
         arriveDatetxt.setInputType(InputType.TYPE_NULL);
     }
 
+
     private void setDateTimeField() {
         departDatetxt.setOnClickListener(this);
         arriveDatetxt.setOnClickListener(this);
 
         Calendar newCalendar = Calendar.getInstance();
+
+
+
         departDatePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
 
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+                departDatePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
                 Calendar newDate = Calendar.getInstance();
                 newDate.set(year, monthOfYear, dayOfMonth);
+
+
                 departDatetxt.setText(dateFormatter.format(newDate.getTime()));
+
             }
 
-        },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+
 
         arriveDatePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
 
+
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
                 Calendar newDate = Calendar.getInstance();
                 newDate.set(year, monthOfYear, dayOfMonth);
+
                 arriveDatetxt.setText(dateFormatter.format(newDate.getTime()));
+
             }
 
-        },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
     }
+
 
 
     @Override
     public void onClick(View view) {
-        if(view == departDatetxt) {
+        if (view == departDatetxt) {
+            departDatePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
             departDatePickerDialog.show();
-        } else if(view == arriveDatetxt) {
+        } else if (view == arriveDatetxt) {
+            arriveDatePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
             arriveDatePickerDialog.show();
         }
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.example.android.airfarescanner/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.example.android.airfarescanner/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
+    }
+
     class FetchAirFareTask extends AsyncTask<String, Void, ArrayList<tripPojo>> {
         public static final String LOG_TAG = "fetchairfaretask";
 
@@ -230,8 +304,8 @@ private EditText departDatetxt;
             JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
             try {
                 //httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-                Log.e(LOG_TAG,"commented");
-                httpTransport = com.google.api.client.extensions.android.http.AndroidHttp.newCompatibleTransport();
+                Log.e(LOG_TAG, "commented");
+                httpTransport = AndroidHttp.newCompatibleTransport();
                 PassengerCounts passengers = new PassengerCounts();
                 passengers.setAdultCount(searchObject.getAdultCount());
                 passengers.setChildCount(searchObject.getChildrenCount());
@@ -264,23 +338,23 @@ private EditText departDatetxt;
                         .setGoogleClientRequestInitializer(new QPXExpressRequestInitializer("AIzaSyDOU4p-DF9EB6tYKo4-KGRubiYdA76W2h4")).build();
 
                 TripsSearchResponse list = qpXExpress.trips().search(parameters).execute();
-                List<TripOption> tripResults=list.getTrips().getTripOption();
+                List<TripOption> tripResults = list.getTrips().getTripOption();
 
                 String id;
 
 
-                for(int i=0; i<tripResults.size(); i++){
+                for (int i = 0; i < tripResults.size(); i++) {
                     tripPojo trip = new tripPojo();
                     double price = 0;
-                    System.out.println("Trip Size: "+ tripResults.size());
+                    System.out.println("Trip Size: " + tripResults.size());
                     //Trip Option ID
-                    id= tripResults.get(i).getId();
-                    System.out.println("id "+id);
+                    id = tripResults.get(i).getId();
+                    System.out.println("id " + id);
                     trip.setId(id);
                     //Pricing
-                    List<PricingInfo> priceInfo= tripResults.get(i).getPricing();
-                    for(int p=0; p<priceInfo.size(); p++){
-                        String priceString [] = priceInfo.get(p).getSaleTotal().split("USD");
+                    List<PricingInfo> priceInfo = tripResults.get(i).getPricing();
+                    for (int p = 0; p < priceInfo.size(); p++) {
+                        String priceString[] = priceInfo.get(p).getSaleTotal().split("USD");
                         double personPrice = Double.parseDouble(priceString[1]);
                         if (p == 0) {
                             personPrice *= searchObject.getAdultCount();
@@ -291,7 +365,7 @@ private EditText departDatetxt;
                         price += personPrice;
 
                     }
-                    System.out.println("Price "+price);
+                    System.out.println("Price " + price);
                     Double truncatedprice = new BigDecimal(price)
                             .setScale(2, BigDecimal.ROUND_HALF_UP)
                             .doubleValue();
@@ -300,82 +374,82 @@ private EditText departDatetxt;
                     trip.setOrigin(searchObject.getFromAirport());
                     trip.setDestination(searchObject.getDestinationAirport());
                     //Slice
-                    List<SliceInfo> sliceinfo= tripResults.get(i).getSlice();
+                    List<SliceInfo> sliceinfo = tripResults.get(i).getSlice();
                     ArrayList<sliceInfo> slice_info = new ArrayList<sliceInfo>();
-                    System.out.println("Slices Size: "+ sliceinfo.size());
+                    System.out.println("Slices Size: " + sliceinfo.size());
                     int totalDuration = 0;
-                    for(int j=0; j<sliceinfo.size(); j++){
+                    for (int j = 0; j < sliceinfo.size(); j++) {
                         sliceInfo sInfo = new sliceInfo();
 
-                        String duration= sliceinfo.get(j).getDuration().toString();
-                        System.out.println("duration "+duration);
+                        String duration = sliceinfo.get(j).getDuration().toString();
+                        System.out.println("duration " + duration);
                         sInfo.setDuration(duration);
                         totalDuration += Integer.parseInt(duration);
                         sInfo.setTravelTime("" + Integer.parseInt(duration) / 60 + " h " + Integer.parseInt(duration) % 60 + " m");
-                        List<SegmentInfo> seginfo= sliceinfo.get(j).getSegment();
+                        List<SegmentInfo> seginfo = sliceinfo.get(j).getSegment();
                         ArrayList<segInfo> seg_info = new ArrayList<segInfo>();
-                        for(int k=0; k<seginfo.size(); k++){
+                        for (int k = 0; k < seginfo.size(); k++) {
                             segInfo seInfo = new segInfo();
-                            String bookingCode= seginfo.get(k).getBookingCode();
-                            System.out.println("bookingCode "+bookingCode);
+                            String bookingCode = seginfo.get(k).getBookingCode();
+                            System.out.println("bookingCode " + bookingCode);
                             seInfo.setBookingCode(bookingCode);
-                            Integer connectionDuration =seginfo.get(k).getConnectionDuration();
+                            Integer connectionDuration = seginfo.get(k).getConnectionDuration();
                             if (connectionDuration != null)
                                 seInfo.setConnectionDuration(connectionDuration);
-                            FlightInfo flightInfo=seginfo.get(k).getFlight();
-                            String flightNum= flightInfo.getNumber();
-                            System.out.println("flightNum "+flightNum);
+                            FlightInfo flightInfo = seginfo.get(k).getFlight();
+                            String flightNum = flightInfo.getNumber();
+                            System.out.println("flightNum " + flightNum);
                             seInfo.setFlightNum(flightNum);
-                            String flightCarrier= flightInfo.getCarrier();
-                            System.out.println("flightCarrier "+flightCarrier);
+                            String flightCarrier = flightInfo.getCarrier();
+                            System.out.println("flightCarrier " + flightCarrier);
                             seInfo.setFlightCarrier(flightCarrier);
 
-                            List<LegInfo> leg=seginfo.get(k).getLeg();
+                            List<LegInfo> leg = seginfo.get(k).getLeg();
                             ArrayList<legInfo> leg_info = new ArrayList<legInfo>();
-                            for(int l=0; l<leg.size(); l++){
+                            for (int l = 0; l < leg.size(); l++) {
                                 legInfo lInfo = new legInfo();
-                                String aircraft= leg.get(l).getAircraft();
-                                System.out.println("aircraft "+aircraft);
+                                String aircraft = leg.get(l).getAircraft();
+                                System.out.println("aircraft " + aircraft);
                                 lInfo.setAircraft(aircraft);
-                                String arrivalTime= leg.get(l).getArrivalTime();
+                                String arrivalTime = leg.get(l).getArrivalTime();
                                 String dateTime[] = arrivalTime.split("T");
-                                String arrivaltime[] ;
+                                String arrivaltime[];
                                 if (dateTime[1].contains("+")) {
                                     arrivaltime = dateTime[1].split("\\+");
-                                }else {
+                                } else {
                                     arrivaltime = dateTime[1].split("\\-");
                                 }
-                                System.out.println("arrivalTime "+arrivaltime[0]);
+                                System.out.println("arrivalTime " + arrivaltime[0]);
                                 lInfo.setArrivalTime(arrivaltime[0]);
-                                String departDateTime=leg.get(l).getDepartureTime();
-                                 dateTime = departDateTime.split("T");
+                                String departDateTime = leg.get(l).getDepartureTime();
+                                dateTime = departDateTime.split("T");
                                 String departtime[];
                                 if (dateTime[1].contains("+")) {
                                     departtime = dateTime[1].split("\\+");
-                                }else {
+                                } else {
                                     departtime = dateTime[1].split("\\-");
                                 }
 
                                 lInfo.setDepartTime(departtime[0]);
-                                System.out.println("departTime "+departtime[0]);
-                                String dest=leg.get(l).getDestination();
+                                System.out.println("departTime " + departtime[0]);
+                                String dest = leg.get(l).getDestination();
                                 lInfo.setDest(dest);
-                                System.out.println("Destination "+dest);
-                                String destTer= leg.get(l).getDestinationTerminal();
+                                System.out.println("Destination " + dest);
+                                String destTer = leg.get(l).getDestinationTerminal();
                                 lInfo.setDestTer(destTer);
-                                System.out.println("DestTer "+destTer);
-                                String origin=leg.get(l).getOrigin();
+                                System.out.println("DestTer " + destTer);
+                                String origin = leg.get(l).getOrigin();
                                 lInfo.setOrigin(origin);
-                                System.out.println("origun "+origin);
-                                String originTer=leg.get(l).getOriginTerminal();
+                                System.out.println("origun " + origin);
+                                String originTer = leg.get(l).getOriginTerminal();
                                 lInfo.setOriginTer(originTer);
-                                System.out.println("OriginTer "+originTer);
-                                int durationLeg= leg.get(l).getDuration();
+                                System.out.println("OriginTer " + originTer);
+                                int durationLeg = leg.get(l).getDuration();
                                 lInfo.setDurationLeg(String.valueOf(durationLeg));
-                                System.out.println("durationleg "+durationLeg);
-                                int mil= leg.get(l).getMileage();
+                                System.out.println("durationleg " + durationLeg);
+                                int mil = leg.get(l).getMileage();
                                 lInfo.setMil(String.valueOf(mil));
-                                System.out.println("Milleage "+mil);
+                                System.out.println("Milleage " + mil);
                                 leg_info.add(lInfo);
 
                             }
@@ -390,8 +464,6 @@ private EditText departDatetxt;
                     trip.setSlice_info(slice_info);
                     trip.setTotalDuration(String.valueOf(totalDuration));
                     tripList.add(trip);
-
-
 
 
                 }

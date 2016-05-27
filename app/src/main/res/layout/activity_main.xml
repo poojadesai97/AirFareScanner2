@@ -101,6 +101,7 @@
             android:inputType="date"
             android:ems="10"
             android:id="@+id/departDateText"
+            android:focusable="false"
             android:layout_weight="0.38" />
 
         <TextView
@@ -120,6 +121,7 @@
             android:layout_height="wrap_content"
             android:inputType="date"
             android:ems="10"
+            android:focusable="false"
             android:id="@+id/arriveDateText" />
     </LinearLayout>
 
