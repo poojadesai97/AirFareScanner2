@@ -10,6 +10,8 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
+
     }
     buildTypes {
         release {
@@ -24,4 +26,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:design:23.4.0'
+    compile 'com.google.apis:google-api-services-qpxExpress:v1-rev18-1.20.0'
+    compile 'com.google.http-client:google-http-client-android:1.12.0-beta'
+
+
 }

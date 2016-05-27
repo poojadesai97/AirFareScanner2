@@ -6,7 +6,7 @@ import android.os.Bundle;
 /**
  * Created by pooja on 15-05-2016.
  */
-public class OneActivity extends ListActivity {
+public class QuickestActivity extends ListActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

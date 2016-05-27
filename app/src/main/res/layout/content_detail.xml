@@ -2,12 +2,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment"
-    android:name="com.example.android.airfarescanner.ResultMainActivityFragment"
+    android:name="com.example.android.airfarescanner.DetailActivity$DetailActivityFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-<<<<<<< HEAD
-    tools:layout="@layout/result_fragment_main" />
-=======
-    tools:layout="@layout/result_fragment_main" />
->>>>>>> master
+    tools:layout="@layout/fragment_detail" />
