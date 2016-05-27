@@ -10,6 +10,7 @@
     android:background="@drawable/sky"
     tools:context="com.example.android.airfarescanner.MainActivity">
 
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

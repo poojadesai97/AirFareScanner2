@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Parcelable;
 import android.text.InputFilter;
@@ -72,6 +73,7 @@ private EditText departDatetxt;
     public static final String LOG_TAG = "AirFareScanner";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         fromAirport = (EditText)findViewById(R.id.fromAirport);
@@ -149,7 +151,7 @@ private EditText departDatetxt;
                     Toast.makeText(getApplicationContext(),"Please select Departure Date", Toast.LENGTH_LONG).show();
                 else {
                     searchObject = new searchPojo(from, to, departDate, arriveDate, adult, children, cabin);
-                    FetchAirFareTask airfareTask = new FetchAirFareTask();
+                    FetchAirFareTask airfareTask = new FetchAirFareTask(MainActivity.this);
                     airfareTask.execute();
 
                 }
@@ -208,9 +210,16 @@ private EditText departDatetxt;
     class FetchAirFareTask extends AsyncTask<String, Void, ArrayList<tripPojo>> {
         public static final String LOG_TAG = "fetchairfaretask";
 
+        private ProgressDialog progress;
+        public FetchAirFareTask(MainActivity activity) {
+            progress = new ProgressDialog(activity);
+        }
+
+
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
+            progress.setMessage("Fetching Data... Please Wait");
+            progress.show();
 
             Log.d(LOG_TAG, "onPreExecute called");
         }
@@ -407,16 +416,13 @@ private EditText departDatetxt;
         @Override
         protected void onPostExecute(ArrayList<tripPojo> list) {
             super.onPostExecute(list);
+            if(progress.isShowing())
+                progress.dismiss();
+
             Intent intent = new Intent(MainActivity.this, ResultMainActivity.class);
             intent.putExtra("List", list);
             startActivity(intent);
-            /*adapter = new SimpleAdapter(
-                    getActivity(), list,
-                    R.layout.cheapest_list_item, new String[]{"airline", "departAirport", "departTime", "travelTime", "arrivalAirport", "arrivalTime", "price"},
-                    new int[]{R.id.airlineText, R.id.departAirport, R.id.departTime, R.id.travelTime, R.id.arrivalAirport, R.id.arrivalTime, R.id.price});
 
-            listView.setAdapter(adapter);
-*/
             Log.d(LOG_TAG, "onPostExecute called");
 
         }
