@@ -15,6 +15,8 @@ import android.view.Menu;
 import android.view.View;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.view.View;
+import android.view.View.OnClickListener;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -75,6 +77,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private Spinner childrensCount;
     private Spinner travelClass;
     searchPojo searchObject;
+    Button Clear;
+    EditText text;
 
     Button search;
     public static final String LOG_TAG = "AirFareScanner";
@@ -88,6 +92,24 @@ public class MainActivity extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        setContentView(R.layout.activity_main);
+        Clear=(Button)findViewById(R.id.button1);
+        text=(EditText)findViewById(R.id.arriveDateText);
+
+        Clear.setOnClickListener(new OnClickListener(){
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                text.setText("");
+                Toast t = Toast.makeText(getApplicationContext(),
+                        "Date Cleared",
+                        Toast.LENGTH_SHORT);
+                t.show();
+
+            }});
         fromAirport = (EditText) findViewById(R.id.fromAirport);
         fromAirport.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
 
