@@ -1,6 +1,7 @@
 package com.example.android.airfarescanner;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -119,6 +120,10 @@ public class ResultMainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == R.id.action_modify) {
+            this.finish();
             return true;
         }
 
