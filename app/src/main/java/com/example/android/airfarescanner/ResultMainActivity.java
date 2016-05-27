@@ -42,7 +42,12 @@ public class ResultMainActivity extends AppCompatActivity {
         setupViewPager(viewPager);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
+
+
         tabLayout.setupWithViewPager(viewPager);
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_cheapest);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_quickest);
+
 
     }
 
