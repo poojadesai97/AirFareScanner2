@@ -119,7 +119,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         adultsCount = (Spinner) findViewById(R.id.adultsCount);
         childrensCount = (Spinner) findViewById(R.id.childCount);
         travelClass = (Spinner) findViewById(R.id.spinner);
-        dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        dateFormatter = new SimpleDateFormat("yyyy-dd-MM", Locale.US);
         findViewsById();
 
         setDateTimeField();
