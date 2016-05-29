@@ -5,11 +5,11 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-<<<<<<< HEAD
+
 import android.net.Uri;
-=======
+
 import android.content.Context;
->>>>>>> ae1c88d679cb74034ecac60cc2b1970bb13df1a5
+
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Parcelable;
