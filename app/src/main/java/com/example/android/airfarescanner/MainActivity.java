@@ -5,7 +5,11 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+<<<<<<< HEAD
 import android.net.Uri;
+=======
+import android.content.Context;
+>>>>>>> ae1c88d679cb74034ecac60cc2b1970bb13df1a5
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Parcelable;
@@ -90,6 +94,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -185,7 +190,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     Toast.makeText(getApplicationContext(), "Please select Departure Date", Toast.LENGTH_LONG).show();
                 else {
                     searchObject = new searchPojo(from, to, departDate, arriveDate, adult, children, cabin);
-                    FetchAirFareTask airfareTask = new FetchAirFareTask();
+                    FetchAirFareTask airfareTask = new FetchAirFareTask(MainActivity.this);
                     airfareTask.execute();
 
                 }
@@ -304,9 +309,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
     class FetchAirFareTask extends AsyncTask<String, Void, ArrayList<tripPojo>> {
         public static final String LOG_TAG = "fetchairfaretask";
 
+        private ProgressDialog progress;
+        public FetchAirFareTask(MainActivity activity) {
+            progress = new ProgressDialog(activity);
+        }
+
+
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
+            progress.setMessage("Fetching Data... Please Wait");
+            progress.show();
 
             Log.d(LOG_TAG, "onPreExecute called");
         }
@@ -501,16 +513,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
         @Override
         protected void onPostExecute(ArrayList<tripPojo> list) {
             super.onPostExecute(list);
+            if(progress.isShowing())
+                progress.dismiss();
+
             Intent intent = new Intent(MainActivity.this, ResultMainActivity.class);
             intent.putExtra("List", list);
             startActivity(intent);
-            /*adapter = new SimpleAdapter(
-                    getActivity(), list,
-                    R.layout.cheapest_list_item, new String[]{"airline", "departAirport", "departTime", "travelTime", "arrivalAirport", "arrivalTime", "price"},
-                    new int[]{R.id.airlineText, R.id.departAirport, R.id.departTime, R.id.travelTime, R.id.arrivalAirport, R.id.arrivalTime, R.id.price});
 
-            listView.setAdapter(adapter);
-*/
             Log.d(LOG_TAG, "onPostExecute called");
 
         }
