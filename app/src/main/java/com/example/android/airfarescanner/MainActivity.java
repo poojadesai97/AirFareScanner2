@@ -41,9 +41,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.qpxExpress.QPXExpress;
 import com.google.api.services.qpxExpress.QPXExpressRequestInitializer;
+import com.google.api.services.qpxExpress.model.CarrierData;
 import com.google.api.services.qpxExpress.model.FlightInfo;
 import com.google.api.services.qpxExpress.model.LegInfo;
 import com.google.api.services.qpxExpress.model.PassengerCounts;
@@ -117,6 +119,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             }});
         fromAirport = (EditText) findViewById(R.id.fromAirport);
         fromAirport.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
+
 
         toAirport = (EditText) findViewById(R.id.toAirport);
         toAirport.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
@@ -372,12 +375,18 @@ public class MainActivity extends Activity implements View.OnClickListener {
                         .setGoogleClientRequestInitializer(new QPXExpressRequestInitializer("AIzaSyDOU4p-DF9EB6tYKo4-KGRubiYdA76W2h4")).build();
 
                 TripsSearchResponse list = qpXExpress.trips().search(parameters).execute();
-                List<TripOption> tripResults = list.getTrips().getTripOption();
+
+                List<CarrierData> cdList = list.getTrips().getData().getCarrier();
+                HashMap<String, String> map = new HashMap<String, String>();
+                for(CarrierData cd : cdList) {
+                    map.put(cd.getCode(), cd.getName());
+
+                }
+                List<TripOption> tripResults=list.getTrips().getTripOption();
 
                 String id;
 
-
-                for (int i = 0; i < tripResults.size(); i++) {
+                for(int i=0; i<tripResults.size(); i++){
                     tripPojo trip = new tripPojo();
                     double price = 0;
                     System.out.println("Trip Size: " + tripResults.size());
@@ -434,9 +443,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
                             String flightNum = flightInfo.getNumber();
                             System.out.println("flightNum " + flightNum);
                             seInfo.setFlightNum(flightNum);
-                            String flightCarrier = flightInfo.getCarrier();
-                            System.out.println("flightCarrier " + flightCarrier);
-                            seInfo.setFlightCarrier(flightCarrier);
+                            String flightCarrier= flightInfo.getCarrier();
+                            System.out.println("flightCarrier "+flightCarrier);
+                            seInfo.setFlightCarrier(map.get(flightCarrier));
+
 
                             List<LegInfo> leg = seginfo.get(k).getLeg();
                             ArrayList<legInfo> leg_info = new ArrayList<legInfo>();
