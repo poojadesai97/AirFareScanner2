@@ -1,34 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+
+
+<RelativeLayout android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@drawable/sky"
-    tools:context="com.example.android.airfarescanner.MainActivity">
+    tools:context="com.example.android.airfarescanner.MainActivity"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-
-    <RelativeLayout
+    <android.support.v7.widget.Toolbar android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#cccccccc"
-        android:padding="15dp"
-        >
-
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:padding="10dp"
         android:id="@+id/linearLayout1"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
-
         <TextView
             android:id="@+id/Source"
             android:layout_width="wrap_content"
@@ -48,9 +49,6 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
-
-
-
 
 
         <TextView
@@ -83,17 +81,17 @@
         android:id="@+id/linearLayout3"
         android:paddingBottom="20dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Depart"
-        android:id="@+id/departDate"
-        android:textStyle="bold"
-        android:singleLine="false"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Depart"
+            android:id="@+id/departDate"
+            android:textStyle="bold"
+            android:singleLine="false"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            />
 
 
         <EditText
@@ -101,41 +99,27 @@
             android:layout_height="wrap_content"
             android:inputType="date"
             android:ems="10"
-            android:textSize="11dp"
             android:id="@+id/departDateText"
-            android:focusable="false"
             android:layout_weight="0.38" />
 
         <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Arrive"
-        android:id="@+id/arriveDate"
-        android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Arrive"
+            android:id="@+id/arriveDate"
+            android:textStyle="bold"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="10dp"
 
-        android:layout_marginLeft="10dp"
-
-         />
+            />
 
         <EditText
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:inputType="date"
             android:ems="10"
-            android:focusable="false"
-            android:textSize="11dp"
             android:id="@+id/arriveDateText" />
-
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignBaseline="@+id/arriveDateText"
-            android:layout_alignBottom="@+id/arriveDateText"
-            android:layout_alignRight="@+id/arriveDateText"
-            android:background="@drawable/cross" />
-
     </LinearLayout>
 
     <View
@@ -246,9 +230,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="60dp" />
-
-
-</RelativeLayout>
 
 
 </RelativeLayout>
