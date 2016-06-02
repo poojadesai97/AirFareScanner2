@@ -13,6 +13,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Parcelable;
+import android.support.v7.app.AlertDialog;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.Menu;
@@ -46,6 +47,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.qpxExpress.QPXExpress;
 import com.google.api.services.qpxExpress.QPXExpressRequestInitializer;
 import com.google.api.services.qpxExpress.model.CarrierData;
+import com.google.api.services.qpxExpress.model.CityData;
 import com.google.api.services.qpxExpress.model.FlightInfo;
 import com.google.api.services.qpxExpress.model.LegInfo;
 import com.google.api.services.qpxExpress.model.PassengerCounts;
@@ -58,9 +60,13 @@ import com.google.api.services.qpxExpress.model.TripOptionsRequest;
 import com.google.api.services.qpxExpress.model.TripsSearchRequest;
 import com.google.api.services.qpxExpress.model.TripsSearchResponse;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -118,7 +124,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
             }});
         fromAirport = (EditText) findViewById(R.id.fromAirport);
-        fromAirport.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
+        //fromAirport.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
+
 
 
         toAirport = (EditText) findViewById(R.id.toAirport);
@@ -241,7 +248,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
 
 
-        arriveDatePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+        /*arriveDatePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
 
 
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -253,7 +260,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
             }
 
-        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));*/
     }
 
 
@@ -264,7 +271,22 @@ public class MainActivity extends Activity implements View.OnClickListener {
             departDatePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
             departDatePickerDialog.show();
         } else if (view == arriveDatetxt) {
-            arriveDatePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
+            Calendar newCalendar = Calendar.getInstance();
+
+            try {
+                arriveDatePickerDialog = new DatePickerDialog(MainActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        Calendar newDate = Calendar.getInstance();
+                        newDate.set(year, monthOfYear, dayOfMonth);
+
+                        arriveDatetxt.setText(dateFormatter.format(newDate.getTime()));
+                    }
+                }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+                arriveDatePickerDialog.getDatePicker().setMinDate(new SimpleDateFormat("yyyy-MM-dd").parse(departDatetxt.getText().toString()).getTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             arriveDatePickerDialog.show();
         }
     }
@@ -382,6 +404,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     map.put(cd.getCode(), cd.getName());
 
                 }
+                HashMap<String, String> cityHashMap = new HashMap<String, String>();
+                List<CityData> cityList = list.getTrips().getData().getCity();
+                for(CityData city: cityList) {
+                    cityHashMap.put(city.getCode(), city.getName());
+                }
                 List<TripOption> tripResults=list.getTrips().getTripOption();
 
                 String id;
@@ -446,6 +473,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                             String flightCarrier= flightInfo.getCarrier();
                             System.out.println("flightCarrier "+flightCarrier);
                             seInfo.setFlightCarrier(map.get(flightCarrier));
+                            seInfo.setFlightCarrierCode(flightCarrier);
 
 
                             List<LegInfo> leg = seginfo.get(k).getLeg();
@@ -485,6 +513,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
                                 String origin = leg.get(l).getOrigin();
                                 lInfo.setOrigin(origin);
                                 System.out.println("origun " + origin);
+
+                                lInfo.setOriginToDestination((cityHashMap.get(origin) != null ? cityHashMap.get(origin) : origin)+ " -> "+(cityHashMap.get(dest) != null ?cityHashMap.get(dest) : dest));
                                 String originTer = leg.get(l).getOriginTerminal();
                                 lInfo.setOriginTer(originTer);
                                 System.out.println("OriginTer " + originTer);
@@ -534,6 +564,45 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         }
     }
+    private String readJson() {
+        return readFile("airports.json");
+    }
+
+    private List<String> readJsonFromFile() {
+
+        List<String> strings = new ArrayList<>();
+        strings.add(readFile("airports.json"));
+
+        return strings;
+    }
+    private String readFile(String filename) {
+        StringBuilder sb = new StringBuilder();
+
+
+        try {
+            InputStream json = getAssets().open(filename);
+            BufferedReader in = new BufferedReader(new InputStreamReader(json, "UTF-8"));
+
+
+            String str;
+            while ((str = in.readLine()) != null) {
+                sb.append(str);
+            }
+
+
+            in.close();
+        } catch (Exception e) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Error")
+                    .setMessage("The JSON file was not able to load properly. These tests won't work until you completely kill this demo app and restart it.")
+                    .setPositiveButton("OK", null)
+                    .show();
+        }
+
+
+        return sb.toString();
+    }
+
 
 
 }

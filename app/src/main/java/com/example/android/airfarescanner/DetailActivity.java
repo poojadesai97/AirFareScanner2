@@ -15,9 +15,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 import org.w3c.dom.Text;
 
@@ -107,9 +110,22 @@ public class DetailActivity extends ActionBarActivity {
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 200);
                         lilayout.setLayoutParams(params);
 
-                        TextView flightCarrier = new TextView(getActivity());
-                        flightCarrier.setText(seg_info.get(j).getFlightCarrier());
+                        String url= "http://pics.avs.io/100/100/DEFAULT.png";
+                        if (seg_info.get(j).getFlightCarrierCode() != null)
+                            url = "http://pics.avs.io/100/100/"+seg_info.get(j).getFlightCarrierCode().toUpperCase()+".png";
+
+                        ImageView flightCarrier = new ImageView(getActivity());
+
+                        /*flightCarrier.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);*/
+                        UrlImageViewHelper.setUrlDrawable(flightCarrier, url);
                         reLayout.addView(flightCarrier);
+
+                        TextView originToDestination = new TextView(getActivity());
+                        originToDestination.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
+                        originToDestination.setText(leg.get(m).getOriginToDestination());
+                        reLayout.addView(originToDestination);
+
+
 
                         TextView departTime = new TextView(getActivity());
                         /*departTime.setHeight(49);
@@ -134,7 +150,7 @@ public class DetailActivity extends ActionBarActivity {
                         travelTime.setTextAppearance(getActivity(), android.R.style.TextAppearance_Small);;
 
                         int duration = Integer.parseInt(leg.get(m).getDurationLeg());
-                        String travlTimeDuration = String.valueOf(duration/60) + " h "+ String.valueOf(duration%60) +" m";
+                        String travlTimeDuration = String.valueOf(duration/60) + " h "+ String.valueOf(duration%60) +" m" ;
                         travelTime.setText(travlTimeDuration);
                         lilayout.addView(travelTime);
 
@@ -158,7 +174,7 @@ public class DetailActivity extends ActionBarActivity {
                     int connection = seg_info.get(j).getConnectionDuration();
                     if (connection > 0) {
                         TextView connectionDuration = new TextView(getActivity());
-                        String connection_Duration = (connection/60) + " h " +(connection%60) + " m ";
+                        String connection_Duration = (connection/60) + " h " +(connection%60) + " m\n";
                         connectionDuration.setText(connection_Duration);
                         reLayout.addView(connectionDuration);
                     }

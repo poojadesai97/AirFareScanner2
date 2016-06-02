@@ -32,4 +32,7 @@
 
     <style name="AirFareListStyle">
         </style>
+    <style name="CustomText">
+        <item name="android:textColor">#741109</item>
+    </style>
 </resources>
