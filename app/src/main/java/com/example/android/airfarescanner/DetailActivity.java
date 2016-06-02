@@ -210,4 +210,10 @@ public class DetailActivity extends ActionBarActivity {
 
         }*/
     }
+
+    /*@Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+        DetailActivity.this.finish();
+    }*/
 }
