@@ -121,6 +121,7 @@
             android:inputType="date"
             android:ems="10"
             android:id="@+id/arriveDateText" />
+
     </LinearLayout>
 
     <View

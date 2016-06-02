@@ -111,7 +111,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
       /*  Clear=(Button)findViewById(R.id.button1);*/
         text=(EditText)findViewById(R.id.arriveDateText);
 
-       /* Clear.setOnClickListener(new OnClickListener(){
+
+       Clear.setOnClickListener(new OnClickListener(){
 
             @Override
             public void onClick(View arg0) {
@@ -124,9 +125,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
             }});
-        fromAirport = (AutoCompleteTextView) findViewById(R.id.fromAirport);
 
-            }});*/
         fromAirport = (AutoCompleteTextView) findViewById(R.id.fromAirport);
 
         fromAirport.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
