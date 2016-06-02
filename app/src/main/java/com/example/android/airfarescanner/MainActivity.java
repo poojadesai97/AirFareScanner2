@@ -27,6 +27,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -61,6 +62,7 @@ import com.google.api.services.qpxExpress.model.TripsSearchResponse;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -77,8 +79,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private DatePickerDialog departDatePickerDialog;
     private DatePickerDialog arriveDatePickerDialog;
     private SimpleDateFormat dateFormatter;
-    private EditText fromAirport;
-    private EditText toAirport;
+    private AutoCompleteTextView fromAirport;
+    private AutoCompleteTextView toAirport;
     private Spinner adultsCount;
     private Spinner childrensCount;
     private Spinner travelClass;
@@ -117,11 +119,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 t.show();
 
             }});
-        fromAirport = (EditText) findViewById(R.id.fromAirport);
+        fromAirport = (AutoCompleteTextView) findViewById(R.id.fromAirport);
         fromAirport.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
 
 
-        toAirport = (EditText) findViewById(R.id.toAirport);
+        toAirport = (AutoCompleteTextView) findViewById(R.id.toAirport);
         toAirport.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
 
         adultsCount = (Spinner) findViewById(R.id.adultsCount);
@@ -224,7 +226,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         Calendar newCalendar = Calendar.getInstance();
 
 
-
         departDatePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
 
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -235,26 +236,29 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 
                 departDatetxt.setText(dateFormatter.format(newDate.getTime()));
+                try {
+                    arriveDatePickerDialog = new DatePickerDialog(MainActivity.this, new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                            Calendar newDate = Calendar.getInstance();
+                            newDate.set(year, monthOfYear, dayOfMonth);
+
+                            arriveDatetxt.setText(dateFormatter.format(newDate.getTime()));
+                        }
+                    }, year, monthOfYear, dayOfMonth);
+                    arriveDatePickerDialog.getDatePicker().setMinDate(new SimpleDateFormat("yyyy-MM-dd").parse(departDatetxt.getText().toString()).getTime());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
 
             }
 
-        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
-
-
-        arriveDatePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-
-
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-
-                Calendar newDate = Calendar.getInstance();
-                newDate.set(year, monthOfYear, dayOfMonth);
-
-                arriveDatetxt.setText(dateFormatter.format(newDate.getTime()));
-
-            }
 
         }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
     }
+
+
 
 
 
@@ -264,7 +268,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             departDatePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
             departDatePickerDialog.show();
         } else if (view == arriveDatetxt) {
-            arriveDatePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
+            //arriveDatePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
             arriveDatePickerDialog.show();
         }
     }
