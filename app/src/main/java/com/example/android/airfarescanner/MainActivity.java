@@ -13,12 +13,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Parcelable;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -75,7 +72,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends Activity implements View.OnClickListener {
     private EditText departDatetxt;
     private EditText arriveDatetxt;
 
@@ -89,7 +86,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Spinner travelClass;
     searchPojo searchObject;
     Button Clear;
+    Button Clear1;
     EditText text;
+    EditText text1;
+
 
     Button search;
     public static final String LOG_TAG = "AirFareScanner";
@@ -104,15 +104,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(myToolbar);
 
 
-      /*  Clear=(Button)findViewById(R.id.button1);*/
+        setContentView(R.layout.activity_main);
+        Clear=(Button)findViewById(R.id.button1);
+        Clear1=(Button)findViewById(R.id.button2);
+
         text=(EditText)findViewById(R.id.arriveDateText);
+        text1=(EditText)findViewById(R.id.departDateText);
 
 
-       Clear.setOnClickListener(new OnClickListener(){
+        Clear.setOnClickListener(new OnClickListener(){
 
             @Override
             public void onClick(View arg0) {
@@ -123,11 +125,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.LENGTH_SHORT);
                 t.show();
 
+            }});
+        Clear1.setOnClickListener(new OnClickListener(){
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                text1.setText("");
+                Toast t = Toast.makeText(getApplicationContext(),
+                        "Date Cleared",
+                        Toast.LENGTH_SHORT);
+                t.show();
 
             }});
-
         fromAirport = (AutoCompleteTextView) findViewById(R.id.fromAirport);
-
         fromAirport.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
 
 
@@ -216,31 +227,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        MenuItem item = menu.findItem(R.id.action_settings);
-        Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
-
-        // Inflate the menu; this adds items to the action bar if it is present.
-
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        if (item.getItemId() == R.id.action_settings) {
-
-            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     private void findViewsById() {
         departDatetxt = (EditText) findViewById(R.id.departDateText);

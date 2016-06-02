@@ -102,6 +102,14 @@
             android:ems="10"
             android:id="@+id/departDateText"
             android:layout_weight="0.38" />
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignBaseline="@+id/departDateText"
+            android:layout_alignBottom="@+id/departDateText"
+            android:layout_alignRight="@+id/departDateText"
+            android:background="@drawable/cross" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -121,6 +129,15 @@
             android:inputType="date"
             android:ems="10"
             android:id="@+id/arriveDateText" />
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignBaseline="@+id/arriveDateText"
+            android:layout_alignBottom="@+id/arriveDateText"
+            android:layout_alignRight="@+id/arriveDateText"
+            android:background="@drawable/cross" />
 
     </LinearLayout>
 
