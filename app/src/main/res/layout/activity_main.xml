@@ -10,7 +10,6 @@
     android:background="@drawable/sky"
     tools:context="com.example.android.airfarescanner.MainActivity">
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,7 +21,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:padding="10dp"
         android:id="@+id/linearLayout1"
         android:layout_alignParentTop="true"
@@ -39,7 +37,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
 
-        <EditText
+        <AutoCompleteTextView
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:id="@+id/fromAirport"
@@ -48,10 +46,16 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
-
-
-
-
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:id="@+id/L2"
+            android:layout_below="@+id/linearLayout1"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
 
         <TextView
             android:id="@+id/Destination"
@@ -61,8 +65,9 @@
             android:textSize="18sp"
             android:layout_marginLeft="30dp"
             android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+<!--            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"-->
+            />
 
         <EditText
             android:layout_width="80dp"
@@ -76,10 +81,11 @@
 
     </LinearLayout>
 
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayout1"
+        android:layout_below="@+id/L2"
         android:id="@+id/linearLayout3"
         android:paddingBottom="20dp">
 
@@ -165,7 +171,6 @@
             android:id="@+id/numberAdults"
             android:scaleX="0.80"
             android:scaleY="0.80"
-
             android:singleLine="false"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />

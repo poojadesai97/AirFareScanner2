@@ -1,40 +1,32 @@
 package com.example.android.airfarescanner;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 
 import android.net.Uri;
 
-import android.content.Context;
-
 import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Parcelable;
+import android.support.v7.app.AlertDialog;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.view.Menu;
 import android.view.View;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.view.View;
 import android.view.View.OnClickListener;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 
+import com.bluelinelabs.logansquare.LoganSquare;
+import com.example.android.airfarescanner.Data.AirportClass;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -56,14 +48,19 @@ import com.google.api.services.qpxExpress.model.TripOptionsRequest;
 import com.google.api.services.qpxExpress.model.TripsSearchRequest;
 import com.google.api.services.qpxExpress.model.TripsSearchResponse;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.Serializable;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -75,7 +72,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private DatePickerDialog departDatePickerDialog;
     private DatePickerDialog arriveDatePickerDialog;
     private SimpleDateFormat dateFormatter;
-    private EditText fromAirport;
+    private AutoCompleteTextView fromAirport;
     private EditText toAirport;
     private Spinner adultsCount;
     private Spinner childrensCount;
@@ -83,9 +80,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
     searchPojo searchObject;
     Button Clear;
     EditText text;
-
+    private String JsonToParse;
+    List<AirportClass> Airports;
     Button search;
     public static final String LOG_TAG = "AirFareScanner";
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -95,113 +94,198 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
 
-        setContentView(R.layout.activity_main);
-        Clear=(Button)findViewById(R.id.button1);
-        text=(EditText)findViewById(R.id.arriveDateText);
+        JsonToParse = readJson();
 
-        Clear.setOnClickListener(new OnClickListener(){
+        try {
+            Airports = LoganSquare.parseList(JsonToParse, AirportClass.class);
+            //for(int i=0;i<Airports.size();i++){
+               // Log.d(LOG_TAG,"Airports" + Airports);
+            //}
 
-            @Override
-            public void onClick(View arg0) {
-                // TODO Auto-generated method stub
-                text.setText("");
-                Toast t = Toast.makeText(getApplicationContext(),
-                        "Date Cleared",
-                        Toast.LENGTH_SHORT);
-                t.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // AirportAdapter adapter=new AirportAdapter(getApplicationContext(),R.layout.activity_main,Airports)
 
-            }});
-        fromAirport = (EditText) findViewById(R.id.fromAirport);
-        fromAirport.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
 
-        toAirport = (EditText) findViewById(R.id.toAirport);
-        toAirport.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
+Log.e(LOG_TAG,String.valueOf(Airports.size()));
+List<String> airports_Names = new ArrayList<String>();
+        for(AirportClass a : Airports) {
+            if (a.getName() !=null && !a.getName().isEmpty())
+            airports_Names.add(a.getName() + " - " +a.getAirport_code());
+        }
+        Log.e(LOG_TAG,String.valueOf(airports_Names));
 
-        adultsCount = (Spinner) findViewById(R.id.adultsCount);
-        childrensCount = (Spinner) findViewById(R.id.childCount);
-        travelClass = (Spinner) findViewById(R.id.spinner);
-        dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-        findViewsById();
 
-        setDateTimeField();
+
+
+    setContentView(R.layout.activity_main);
+
+    Clear=(Button)
+
+    findViewById(R.id.button1);
+
+    text=(EditText)
+
+    findViewById(R.id.arriveDateText);
+
+    Clear.setOnClickListener(new
+
+    OnClickListener() {
+
+        @Override
+        public void onClick (View arg0){
+            // TODO Auto-generated method stub
+            text.setText("");
+            Toast t = Toast.makeText(getApplicationContext(),
+                    "Date Cleared",
+                    Toast.LENGTH_SHORT);
+            t.show();
+
+        }
+    }
+
+    );
+    fromAirport=(AutoCompleteTextView)
+
+    findViewById(R.id.fromAirport);
+
+    /*fromAirport.setFilters(new InputFilter[]
+
+    {
+        new InputFilter.AllCaps()
+    }
+
+    );
+*/
+        ArrayAdapter<String> adapterNames = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,airports_Names);
+        fromAirport.setAdapter(adapterNames);
+
+    toAirport=(EditText)
+
+    findViewById(R.id.toAirport);
+
+    toAirport.setFilters(new InputFilter[]
+
+    {
+        new InputFilter.AllCaps()
+    }
+
+    );
+
+    adultsCount=(Spinner)
+
+    findViewById(R.id.adultsCount);
+
+    childrensCount=(Spinner)
+
+    findViewById(R.id.childCount);
+
+    travelClass=(Spinner)
+
+    findViewById(R.id.spinner);
+
+    dateFormatter=new
+
+    SimpleDateFormat("yyyy-MM-dd",Locale.US);
+
+    findViewsById();
+
+    setDateTimeField();
 
         /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);*/
-        search = (Button) findViewById(R.id.button);
-        Log.e(LOG_TAG, "Main Activity");
+    search=(Button)
+
+    findViewById(R.id.button);
+
+    Log.e(LOG_TAG,"Main Activity");
 
 
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
-// Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.dropdown_array, android.R.layout.simple_spinner_item);
+    Spinner spinner = (Spinner) findViewById(R.id.spinner);
+    // Create an ArrayAdapter using the string array and a default spinner layout
+    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+            R.array.dropdown_array, android.R.layout.simple_spinner_item);
 // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
+    spinner.setAdapter(adapter);
 
 
-        Spinner adultno = (Spinner) findViewById(R.id.adultsCount);
-// Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this,
-                R.array.adultNumber, android.R.layout.simple_spinner_item);
+    Spinner adultno = (Spinner) findViewById(R.id.adultsCount);
+    // Create an ArrayAdapter using the string array and a default spinner layout
+    ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this,
+            R.array.adultNumber, android.R.layout.simple_spinner_item);
 // Specify the layout to use when the list of choices appears
-        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 // Apply the adapter to the spinner
-        adultno.setAdapter(adapter1);
+    adultno.setAdapter(adapter1);
 
-        Spinner childno = (Spinner) findViewById(R.id.childCount);
-// Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this,
-                R.array.childNumber, android.R.layout.simple_spinner_item);
+    Spinner childno = (Spinner) findViewById(R.id.childCount);
+    // Create an ArrayAdapter using the string array and a default spinner layout
+    ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this,
+            R.array.childNumber, android.R.layout.simple_spinner_item);
 // Specify the layout to use when the list of choices appears
-        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 // Apply the adapter to the spinner
-        childno.setAdapter(adapter2);
-        search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String from = fromAirport.getText().toString();
-                String to = toAirport.getText().toString();
-                String arriveDate = arriveDatetxt.getText().toString();
-                String departDate = departDatetxt.getText().toString();
-                int adult = Integer.parseInt(adultsCount.getSelectedItem().toString());
-                int children = Integer.parseInt(childrensCount.getSelectedItem().toString());
-                String cabin = travelClass.getSelectedItem().toString();
+    childno.setAdapter(adapter2);
+    search.setOnClickListener(new View.OnClickListener()
+
+    {
+        @Override
+        public void onClick (View view){
+
+        String from = fromAirport.getText().toString();
+            String airportName [] = from.split(" - ");
+            from = airportName[1];
+            Log.e(LOG_TAG, from);
+        String to = toAirport.getText().toString();
+        String arriveDate = arriveDatetxt.getText().toString();
+        String departDate = departDatetxt.getText().toString();
+        int adult = Integer.parseInt(adultsCount.getSelectedItem().toString());
+        int children = Integer.parseInt(childrensCount.getSelectedItem().toString());
+        String cabin = travelClass.getSelectedItem().toString();
 
 
-                Log.e(LOG_TAG, "Search Clicked");
-                Log.e(LOG_TAG, "From " + fromAirport.getText());
-                Log.e(LOG_TAG, "To " + toAirport.getText());
-                Log.e(LOG_TAG, "Adult Count :" + adultsCount.getSelectedItem().toString());
-                Log.e(LOG_TAG, "Child Count : " + childrensCount.getSelectedItem().toString());
-                Log.e(LOG_TAG, "Depart Date : " + departDatetxt.getText());
-                Log.e(LOG_TAG, "Arrive Date :" + arriveDatetxt.getText());
+        Log.e(LOG_TAG, "Search Clicked");
+        Log.e(LOG_TAG, "From " + from);
+        Log.e(LOG_TAG, "To " + toAirport.getText());
+        Log.e(LOG_TAG, "Adult Count :" + adultsCount.getSelectedItem().toString());
+        Log.e(LOG_TAG, "Child Count : " + childrensCount.getSelectedItem().toString());
+        Log.e(LOG_TAG, "Depart Date : " + departDatetxt.getText());
+        Log.e(LOG_TAG, "Arrive Date :" + arriveDatetxt.getText());
 
-                if (from.isEmpty())
-                    Toast.makeText(getApplicationContext(), "Invalid Departure Airport", Toast.LENGTH_LONG).show();
-                else if (to.isEmpty())
-                    Toast.makeText(getApplicationContext(), "Invalid Detination Airport ", Toast.LENGTH_LONG).show();
-                else if (departDate.isEmpty())
-                    Toast.makeText(getApplicationContext(), "Please select Departure Date", Toast.LENGTH_LONG).show();
-                else {
-                    searchObject = new searchPojo(from, to, departDate, arriveDate, adult, children, cabin);
-                    FetchAirFareTask airfareTask = new FetchAirFareTask(MainActivity.this);
-                    airfareTask.execute();
-
-                }
-
-
-            }
-        });
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        if (from.isEmpty())
+            Toast.makeText(getApplicationContext(), "Invalid Departure Airport", Toast.LENGTH_LONG).show();
+        else if (to.isEmpty())
+            Toast.makeText(getApplicationContext(), "Invalid Detination Airport ", Toast.LENGTH_LONG).show();
+        else if (departDate.isEmpty())
+            Toast.makeText(getApplicationContext(), "Please select Departure Date", Toast.LENGTH_LONG).show();
+        else {
+            searchObject = new searchPojo(from, to, departDate, arriveDate, adult, children, cabin);
+            FetchAirFareTask airfareTask = new FetchAirFareTask(MainActivity.this);
+            airfareTask.execute();
+        }
     }
+    }
+
+    );
+    // ATTENTION: This was auto-generated to implement the App Indexing API.
+    // See https://g.co/AppIndexing/AndroidStudio for more information.
+    client=new GoogleApiClient.Builder(this).
+
+    addApi(AppIndex.API)
+
+    .
+
+    build();
+}
+
 
 
     private void findViewsById() {
@@ -232,13 +316,30 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 
                 departDatetxt.setText(dateFormatter.format(newDate.getTime()));
+                try {
+                    arriveDatePickerDialog = new DatePickerDialog(MainActivity.this, new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                            Calendar newDate = Calendar.getInstance();
+                            newDate.set(year, monthOfYear, dayOfMonth);
+
+                            arriveDatetxt.setText(dateFormatter.format(newDate.getTime()));
+                        }
+                    }, year, monthOfYear, dayOfMonth);
+                    arriveDatePickerDialog.getDatePicker().setMinDate(new SimpleDateFormat("yyyy-MM-dd").parse(departDatetxt.getText().toString()).getTime());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
 
             }
+
 
         }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
 
 
-        arriveDatePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+
+       /* arriveDatePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
 
 
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -250,7 +351,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
             }
 
-        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));*/
     }
 
 
@@ -261,7 +362,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             departDatePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
             departDatePickerDialog.show();
         } else if (view == arriveDatetxt) {
-            arriveDatePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
+            //arriveDatePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
             arriveDatePickerDialog.show();
         }
     }
@@ -327,6 +428,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
         protected ArrayList<tripPojo> doInBackground(String... params) {
             ArrayList<tripPojo> tripList;
             tripList = new ArrayList<tripPojo>();
+
+
+
+
+
 
 
             // adding each child node to HashMap key => value
@@ -523,6 +629,44 @@ public class MainActivity extends Activity implements View.OnClickListener {
             Log.d(LOG_TAG, "onPostExecute called");
 
         }
+    }
+    private String readJson() {
+        return readFile("airports.json");
+    }
+
+    private List<String> readJsonFromFile() {
+
+        List<String> strings = new ArrayList<>();
+        strings.add(readFile("airports.json"));
+
+        return strings;
+    }
+    private String readFile(String filename) {
+        StringBuilder sb = new StringBuilder();
+
+
+        try {
+            InputStream json = getAssets().open(filename);
+            BufferedReader in = new BufferedReader(new InputStreamReader(json, "UTF-8"));
+
+
+            String str;
+            while ((str = in.readLine()) != null) {
+                sb.append(str);
+            }
+
+
+            in.close();
+        } catch (Exception e) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Error")
+                    .setMessage("The JSON file was not able to load properly. These tests won't work until you completely kill this demo app and restart it.")
+                    .setPositiveButton("OK", null)
+                    .show();
+        }
+
+
+        return sb.toString();
     }
 
 
