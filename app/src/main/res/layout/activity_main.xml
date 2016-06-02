@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<RelativeLayout android:layout_width="wrap_content"
+<RelativeLayout
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -22,10 +23,6 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"/>
 
-<<<<<<< HEAD
-        <LinearLayout
-            android:layout_width="match_parent"
-=======
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,132 +34,20 @@
         <TextView
             android:id="@+id/Source"
             android:layout_width="wrap_content"
->>>>>>> dd78b72c1ccd252df9ad2e95c7c427eaae7377ac
             android:layout_height="wrap_content"
-
-            android:padding="10dp"
-            android:id="@+id/linearLayout1"
-            android:layout_alignParentTop="true"
-<<<<<<< HEAD
+            android:text="From"
+            android:textSize="18sp"
+            android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
+            android:layout_alignParentStart="true" />
 
-            <TextView
-                android:id="@+id/Source"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="From"
-                android:textSize="18sp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-
-            <AutoCompleteTextView
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/fromAirport"
-                android:layout_marginRight="30dp"
-                android:layout_marginLeft="10dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
-
-
-
-
-
-            <TextView
-                android:id="@+id/Destination"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="To"
-                android:textSize="18sp"
-                android:layout_marginLeft="30dp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-
-            <AutoCompleteTextView
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/toAirport"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <AutoCompleteTextView
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/linearLayout1"
-            android:id="@+id/linearLayout3"
-            android:paddingBottom="20dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Depart"
-                android:id="@+id/departDate"
-                android:textStyle="bold"
-                android:singleLine="false"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                />
-
-
-            <EditText
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:inputType="date"
-                android:ems="10"
-                android:textSize="11dp"
-                android:id="@+id/departDateText"
-                android:focusable="false"
-                android:layout_weight="0.38" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Arrive"
-                android:id="@+id/arriveDate"
-                android:textStyle="bold"
-
-                android:layout_marginLeft="10dp"
-
-                />
-
-            <EditText
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:inputType="date"
-                android:ems="10"
-                android:focusable="false"
-                android:textSize="11dp"
-                android:id="@+id/arriveDateText" />
-
-            <Button
-                android:id="@+id/button1"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_alignBaseline="@+id/arriveDateText"
-                android:layout_alignBottom="@+id/arriveDateText"
-                android:layout_alignRight="@+id/arriveDateText"
-                android:background="@drawable/cross" />
-
-        </LinearLayout>
-
-        <View
-            android:id="@+id/SplitLine_hor1"
-            android:layout_width="match_parent"
-            android:layout_height= "2dp"
-            android:background="#343D39"
-            android:layout_below="@+id/linearLayout3"
-=======
+            android:id="@+id/fromAirport"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
 
@@ -178,7 +63,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
 
-        <EditText
+        <AutoCompleteTextView
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:id="@+id/toAirport"
@@ -227,76 +112,12 @@
             android:textStyle="bold"
             android:layout_marginRight="30dp"
             android:layout_marginLeft="10dp"
->>>>>>> dd78b72c1ccd252df9ad2e95c7c427eaae7377ac
 
             />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <EditText
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-<<<<<<< HEAD
-            android:layout_below="@+id/linearLayout3"
-            android:id="@+id/linearLayout"
-            android:paddingTop="20dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignLeft="@+id/linearLayout3"
-            android:layout_alignStart="@+id/linearLayout3"
-            android:weightSum="1">
-            <TextView
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Adults"
-                android:textStyle="bold"
-                android:id="@+id/numberAdults"
-                android:scaleX="0.80"
-                android:scaleY="0.80"
-
-                android:singleLine="false"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-            <Spinner
-                android:layout_width="75dp"
-                android:layout_height="30dp"
-                android:id="@+id/adultsCount"
-                android:textStyle="bold"
-                android:spinnerMode="dropdown"
-                android:layout_toRightOf="@+id/numberAdults"
-                />
-
-            <View
-                android:id="@+id/SplitLine_vert1"
-                android:layout_width="2dp"
-                android:layout_height= "40dp"
-                android:background="#343D39"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-
-                />
-            <TextView
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Children"
-                android:textStyle="bold"
-                android:id="@+id/numberChild"
-                android:scaleX="0.80"
-                android:scaleY="0.80"
-                android:singleLine="true"
-                />
-
-            <Spinner
-                android:layout_width="75dp"
-                android:layout_height="30dp"
-                android:id="@+id/childCount"
-                android:textStyle="bold"
-                android:spinnerMode="dropdown"
-                android:layout_toRightOf="@+id/numberChild" />
-
-
-        </LinearLayout>
-=======
             android:inputType="date"
             android:ems="10"
             android:id="@+id/arriveDateText" />
@@ -310,48 +131,106 @@
         android:layout_below="@+id/linearLayout3"
 
         />
->>>>>>> dd78b72c1ccd252df9ad2e95c7c427eaae7377ac
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout3"
+        android:id="@+id/linearLayout"
+        android:paddingTop="20dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignLeft="@+id/linearLayout3"
+        android:layout_alignStart="@+id/linearLayout3"
+        android:weightSum="1">
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Class"
+            android:text="Adults"
             android:textStyle="bold"
-            android:id="@+id/nameOfClass"
+            android:id="@+id/numberAdults"
             android:scaleX="0.80"
             android:scaleY="0.80"
-            android:textAlignment="center"
-            android:singleLine="false"
-            android:layout_below="@+id/linearLayout"
-            android:layout_marginTop="26dp" />
 
+            android:singleLine="false"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
         <Spinner
-            android:layout_width="200dp"
-            android:layout_height="80dp"
-            android:id="@+id/spinner"
+            android:layout_width="75dp"
+            android:layout_height="30dp"
+            android:id="@+id/adultsCount"
             android:textStyle="bold"
             android:spinnerMode="dropdown"
-            android:layout_below="@+id/linearLayout"
-            android:layout_toRightOf="@+id/nameOfClass"
+            android:layout_toRightOf="@+id/numberAdults"
             />
 
-        <Button
-            android:layout_width="wrap_content"
+        <View
+            android:id="@+id/SplitLine_vert1"
+            android:layout_width="2dp"
+            android:layout_height= "40dp"
+            android:background="#343D39"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+
+            />
+        <TextView
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
-            android:text="Search"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Children"
             android:textStyle="bold"
-            android:id="@+id/button"
-            android:gravity="center"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="60dp" />
+            android:id="@+id/numberChild"
+            android:scaleX="0.80"
+            android:scaleY="0.80"
+            android:singleLine="true"
+            />
+
+        <Spinner
+            android:layout_width="75dp"
+            android:layout_height="30dp"
+            android:id="@+id/childCount"
+            android:textStyle="bold"
+            android:spinnerMode="dropdown"
+            android:layout_toRightOf="@+id/numberChild" />
 
 
-<<<<<<< HEAD
-    </RelativeLayout>
+    </LinearLayout>
 
-=======
->>>>>>> dd78b72c1ccd252df9ad2e95c7c427eaae7377ac
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Class"
+        android:textStyle="bold"
+        android:id="@+id/nameOfClass"
+        android:scaleX="0.80"
+        android:scaleY="0.80"
+        android:textAlignment="center"
+        android:singleLine="false"
+        android:layout_below="@+id/linearLayout"
+        android:layout_marginTop="26dp" />
+
+    <Spinner
+        android:layout_width="200dp"
+        android:layout_height="80dp"
+        android:id="@+id/spinner"
+        android:textStyle="bold"
+        android:spinnerMode="dropdown"
+        android:layout_below="@+id/linearLayout"
+        android:layout_toRightOf="@+id/nameOfClass"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Search"
+        android:textStyle="bold"
+        android:id="@+id/button"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="60dp" />
+
 
 </RelativeLayout>

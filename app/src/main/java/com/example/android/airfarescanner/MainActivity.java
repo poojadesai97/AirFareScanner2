@@ -122,13 +122,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.LENGTH_SHORT);
                 t.show();
 
-<<<<<<< HEAD
+
             }});
         fromAirport = (AutoCompleteTextView) findViewById(R.id.fromAirport);
-=======
+
             }});*/
-        fromAirport = (EditText) findViewById(R.id.fromAirport);
->>>>>>> dd78b72c1ccd252df9ad2e95c7c427eaae7377ac
+        fromAirport = (AutoCompleteTextView) findViewById(R.id.fromAirport);
+
         fromAirport.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
 
 
