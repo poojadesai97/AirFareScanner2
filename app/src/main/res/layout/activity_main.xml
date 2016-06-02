@@ -18,11 +18,11 @@
         >
 
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:id="@+id/linearLayout1"
+        android:id="@+id/r1"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
@@ -33,29 +33,20 @@
             android:layout_height="wrap_content"
             android:text="From"
             android:textSize="18sp"
-            android:layout_centerVertical="true"
+            android:layout_alignBottom="@+id/fromAirport"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
 
         <AutoCompleteTextView
-            android:layout_width="80dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/fromAirport"
             android:layout_marginRight="30dp"
             android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/Source"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:id="@+id/L2"
-            android:layout_below="@+id/linearLayout1"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
 
         <TextView
             android:id="@+id/Destination"
@@ -63,29 +54,29 @@
             android:layout_height="wrap_content"
             android:text="To"
             android:textSize="18sp"
-            android:layout_marginLeft="30dp"
-            android:layout_centerVertical="true"
-<!--            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"-->
-            />
+
+            android:layout_alignBaseline="@+id/toAirport"
+            android:layout_alignBottom="@+id/toAirport"
+            android:layout_toLeftOf="@+id/fromAirport"
+            android:layout_toStartOf="@+id/fromAirport" />
 
         <EditText
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:id="@+id/toAirport"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_below="@+id/fromAirport"
+            android:layout_alignLeft="@+id/fromAirport"
+            android:layout_alignStart="@+id/fromAirport"
+            android:layout_alignRight="@+id/fromAirport"
+            android:layout_alignEnd="@+id/fromAirport" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/L2"
+        android:layout_below="@+id/r1"
         android:id="@+id/linearLayout3"
         android:paddingBottom="20dp">
 
