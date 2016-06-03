@@ -28,11 +28,6 @@ public class ResultMainActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.result_fragment_main, container, false);
 
-        /*ArrayList<String> ql = new ArrayList<String>();
-        ql.add("Main");
-        ListView listView = (ListView)rootView.findViewById(R.id.listview);
-        adapter = new ArrayAdapter<String>(getActivity(), R.layout.airlines_list, R.id.item_text, ql);
-        listView.setAdapter(adapter);*/
 
         return rootView;
     }

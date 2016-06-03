@@ -15,6 +15,15 @@ public class legInfo  implements Serializable {
     String originTer;
     String durationLeg;
     String mil;
+    String originToDestination;
+
+    public String getOriginToDestination() {
+        return originToDestination;
+    }
+
+    public void setOriginToDestination(String originToDestination) {
+        this.originToDestination = originToDestination;
+    }
 
     public String getAircraft() {
         return aircraft;
