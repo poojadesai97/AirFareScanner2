@@ -37,6 +37,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 
+import com.bluelinelabs.logansquare.LoganSquare;
+import com.example.android.airfarescanner.Data.AirportClass;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -90,12 +92,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private Spinner childrensCount;
     private Spinner travelClass;
     searchPojo searchObject;
+    List<AirportClass> Airports;
     Button Clear;
     Button Clear1;
     EditText text;
     EditText text1;
 
-
+    private String JsonToParse;
     Button search;
     public static final String LOG_TAG = "AirFareScanner";
     /**
@@ -112,6 +115,28 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 
         setContentView(R.layout.activity_main);
+
+        JsonToParse = readJson();
+
+        try {
+            Airports = LoganSquare.parseList(JsonToParse, AirportClass.class);
+            //for(int i=0;i<Airports.size();i++){
+            // Log.d(LOG_TAG,"Airports" + Airports);
+            //}
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // AirportAdapter adapter=new AirportAdapter(getApplicationContext(),R.layout.activity_main,Airports)
+
+
+        Log.e(LOG_TAG,String.valueOf(Airports.size()));
+        List<String> airports_Names = new ArrayList<String>();
+        for(AirportClass a : Airports) {
+            if (a.getName() !=null && !a.getName().isEmpty())
+                airports_Names.add(a.getCity() + " - " +a.getAirport_code());
+        }
+        Log.e(LOG_TAG,String.valueOf(airports_Names));
         Clear=(Button)findViewById(R.id.button1);
         Clear1=(Button)findViewById(R.id.button2);
 
@@ -145,12 +170,17 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
             }});
         fromAirport = (AutoCompleteTextView) findViewById(R.id.fromAirport);
-        fromAirport.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
+
+        ArrayAdapter<String> adapterNames = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,airports_Names);
+        fromAirport.setAdapter(adapterNames);
+        //fromAirport.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
 
 
 
         toAirport = (AutoCompleteTextView) findViewById(R.id.toAirport);
-        toAirport.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
+        ArrayAdapter<String> adapterto = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,airports_Names);
+        toAirport.setAdapter(adapterto);
+        //toAirport.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
 
         adultsCount = (Spinner) findViewById(R.id.adultsCount);
         childrensCount = (Spinner) findViewById(R.id.childCount);
@@ -307,11 +337,24 @@ public class MainActivity extends Activity implements View.OnClickListener {
                         arriveDatetxt.setText(dateFormatter.format(newDate.getTime()));
                     }
                 }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
-                arriveDatePickerDialog.getDatePicker().setMinDate(new SimpleDateFormat("yyyy-MM-dd").parse(departDatetxt.getText().toString()).getTime());
+                if(departDatetxt.getText() == null || departDatetxt.getText().length()==0)
+                {
+                    Toast t = Toast.makeText(getApplicationContext(),
+                          "Please Select the Depart Date",
+                            Toast.LENGTH_LONG);
+                    t.show();
+                    departDatePickerDialog.show();
+
+                }
+                else{
+                    arriveDatePickerDialog.getDatePicker().setMinDate(new SimpleDateFormat("yyyy-MM-dd").parse(departDatetxt.getText().toString()).getTime());
+                    arriveDatePickerDialog.show();
+
+                }
+
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            arriveDatePickerDialog.show();
         }
     }
 
