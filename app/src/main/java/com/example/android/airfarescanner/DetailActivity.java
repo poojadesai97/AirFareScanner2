@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -27,7 +28,6 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 
 public class DetailActivity extends ActionBarActivity {
-
 
 
     @Override
@@ -66,6 +66,7 @@ public class DetailActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 */
+
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -93,28 +94,30 @@ public class DetailActivity extends ActionBarActivity {
             Intent intent = getActivity().getIntent();
             Bundle extras = intent.getExtras();
             tripPojo trip = new tripPojo();
-            if(extras != null) {
-                trip = (tripPojo)extras.getSerializable("detailTrip");
+            if (extras != null) {
+                trip = (tripPojo) extras.getSerializable("detailTrip");
                 //forecastStr = t.getOrigin() + " "+ t.getDestination()+ " "+t.getPrice();
             }
-            int count= 0;
+            int count = 0;
             LinearLayout reLayout = (LinearLayout) rootView.findViewById(R.id.fragmentDetail);
             ArrayList<sliceInfo> slice = trip.getSlice_info();
-            for(int i = 0; i <slice.size();i++) {
+            for (int i = 0; i < slice.size(); i++) {
                 ArrayList<segInfo> seg_info = slice.get(i).getSeg_info();
-                for(int j = 0; j < seg_info.size();j++) {
+                for (int j = 0; j < seg_info.size(); j++) {
                     ArrayList<legInfo> leg = seg_info.get(j).getLeg_info();
-                    for(int m = 0;m <leg.size();m++) {
+                    for (int m = 0; m < leg.size(); m++) {
                         LinearLayout lilayout = new LinearLayout(getActivity());
                         lilayout.setOrientation(LinearLayout.HORIZONTAL);
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 200);
                         lilayout.setLayoutParams(params);
 
-                        String url= "http://pics.avs.io/100/100/DEFAULT.png";
+                        String url = "http://pics.avs.io/100/100/DEFAULT.png";
                         if (seg_info.get(j).getFlightCarrierCode() != null)
-                            url = "http://pics.avs.io/100/100/"+seg_info.get(j).getFlightCarrierCode().toUpperCase()+".png";
+                            url = "http://pics.avs.io/100/100/" + seg_info.get(j).getFlightCarrierCode().toUpperCase() + ".png";
 
                         ImageView flightCarrier = new ImageView(getActivity());
+                        ViewGroup.LayoutParams p = new ViewGroup.LayoutParams(200, 200);
+                        flightCarrier.setLayoutParams(p);
 
                         /*flightCarrier.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);*/
                         UrlImageViewHelper.setUrlDrawable(flightCarrier, url);
@@ -126,13 +129,13 @@ public class DetailActivity extends ActionBarActivity {
                         reLayout.addView(originToDestination);
 
 
-
                         TextView departTime = new TextView(getActivity());
                         /*departTime.setHeight(49);
                         departTime.setWidth(52);*/
                         //departTime.set
                         departTime.setPadding(2, 2, 100, 2);
-                        departTime.setTextAppearance(getActivity(), android.R.style.TextAppearance_Small);;
+                        departTime.setTextAppearance(getActivity(), android.R.style.TextAppearance_Small);
+                        ;
                         departTime.setText(leg.get(m).getDepartTime());
                         lilayout.addView(departTime);
 
@@ -141,16 +144,18 @@ public class DetailActivity extends ActionBarActivity {
                         departAirport.setWidth(48);*/
                         departAirport.setPadding(2, 2, 100, 2);
 
-                        departAirport.setTextAppearance(getActivity(), android.R.style.TextAppearance_Medium);;
+                        departAirport.setTextAppearance(getActivity(), android.R.style.TextAppearance_Medium);
+                        ;
                         departAirport.setText(leg.get(m).getOrigin());
                         lilayout.addView(departAirport);
 
                         TextView travelTime = new TextView(getActivity());
                         travelTime.setPadding(2, 2, 100, 2);
-                        travelTime.setTextAppearance(getActivity(), android.R.style.TextAppearance_Small);;
+                        travelTime.setTextAppearance(getActivity(), android.R.style.TextAppearance_Small);
+                        ;
 
                         int duration = Integer.parseInt(leg.get(m).getDurationLeg());
-                        String travlTimeDuration = String.valueOf(duration/60) + " h "+ String.valueOf(duration%60) +" m" ;
+                        String travlTimeDuration = String.valueOf(duration / 60) + " h " + String.valueOf(duration % 60) + " m";
                         travelTime.setText(travlTimeDuration);
                         lilayout.addView(travelTime);
 
@@ -158,13 +163,14 @@ public class DetailActivity extends ActionBarActivity {
                         TextView arrivalAirport = new TextView(getActivity());
                         /*arrivalAirport.setHeight(67);
                         arrivalAirport.setWidth(43);*/
-                        arrivalAirport.setTextAppearance(getActivity(), android.R.style.TextAppearance_Medium);;
+                        arrivalAirport.setTextAppearance(getActivity(), android.R.style.TextAppearance_Medium);
+                        ;
                         arrivalAirport.setPadding(2, 2, 100, 2);
                         arrivalAirport.setText(leg.get(m).getDest());
                         lilayout.addView(arrivalAirport);
 
                         TextView arrivalTime = new TextView(getActivity());
-                        arrivalTime.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT ));
+                        arrivalTime.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                         arrivalTime.setText(leg.get(m).getArrivalTime());
                         lilayout.addView(arrivalTime);
 
@@ -174,7 +180,7 @@ public class DetailActivity extends ActionBarActivity {
                     int connection = seg_info.get(j).getConnectionDuration();
                     if (connection > 0) {
                         TextView connectionDuration = new TextView(getActivity());
-                        String connection_Duration = (connection/60) + " h " +(connection%60) + " m\n";
+                        String connection_Duration = (connection / 60) + " h " + (connection % 60) + " m\n";
                         connectionDuration.setText(connection_Duration);
                         reLayout.addView(connectionDuration);
                     }
