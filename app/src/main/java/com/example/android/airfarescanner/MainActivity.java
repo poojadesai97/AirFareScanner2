@@ -15,9 +15,14 @@ import android.os.Build;
 import android.os.Parcelable;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
+<<<<<<< HEAD
 import android.support.v7.widget.Toolbar;
+=======
+import android.text.Editable;
+>>>>>>> 8f8b441b94f67bfbdf1906c28cfa76224771a15b
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +35,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -180,6 +186,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         ArrayAdapter<String> adapterNames = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,airports_Names);
         fromAirport.setAdapter(adapterNames);
+        fromAirport.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.e(LOG_TAG, parent.getItemAtPosition(position).toString());
+                String fromCityCode [] = parent.getItemAtPosition(position).toString().split(" - ");
+                fromAirport.setText(fromCityCode[1]);
+            }
+        });
         //fromAirport.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
 
 
@@ -187,6 +201,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         toAirport = (AutoCompleteTextView) findViewById(R.id.toAirport);
         ArrayAdapter<String> adapterto = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,airports_Names);
         toAirport.setAdapter(adapterto);
+        toAirport.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.e(LOG_TAG, parent.getItemAtPosition(position).toString());
+                String toCityCode [] = parent.getItemAtPosition(position).toString().split(" - ");
+                toAirport.setText(toCityCode[1]);
+            }
+        });
         //toAirport.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
 
         adultsCount = (Spinner) findViewById(R.id.adultsCount);
@@ -234,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View view) {
                 String from = fromAirport.getText().toString();
-                String to = toAirport.getText().toString();
+                String to= toAirport.getText().toString();
                 String arriveDate = arriveDatetxt.getText().toString();
                 String departDate = departDatetxt.getText().toString();
                 int adult = Integer.parseInt(adultsCount.getSelectedItem().toString());
