@@ -15,11 +15,8 @@ import android.os.Build;
 import android.os.Parcelable;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
-<<<<<<< HEAD
 import android.support.v7.widget.Toolbar;
-=======
 import android.text.Editable;
->>>>>>> 8f8b441b94f67bfbdf1906c28cfa76224771a15b
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -127,7 +124,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
-
 
 
       //  setContentView(R.layout.activity_main);
