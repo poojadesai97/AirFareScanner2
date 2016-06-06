@@ -25,10 +25,10 @@ public class AirportClass {
     private String country;
     @SerializedName("lat")
     @JsonField(name = "lat")
-    private String Longitude;
+    private String Latitude;
     @SerializedName("lon")
     @JsonField(name = "lon")
-    private String Latitude;
+    private String Longitude;
     @SerializedName("tz")
     @JsonField(name = "tz")
     private String tz;
@@ -73,7 +73,7 @@ public class AirportClass {
 
     }
 
-    public AirportClass(String airport_code, String name, String city, String country, String longitude, String latitude, String tz, String state, String woeid, String phone, String type, String email, String url, String runway_length, String elev, String icao, String direct_flights, String carriers) {
+    public AirportClass(String airport_code, String name, String city, String country, String latitude, String longitude, String tz, String state, String woeid, String phone, String type, String email, String url, String runway_length, String elev, String icao, String direct_flights, String carriers) {
         Airport_code = airport_code;
         Name = name;
         this.city = city;
