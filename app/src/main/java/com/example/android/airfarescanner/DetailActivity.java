@@ -1,6 +1,12 @@
 package com.example.android.airfarescanner;
 
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,12 +30,31 @@ import android.widget.TextView;
 
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
+
+
 import org.w3c.dom.Text;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import se.walkercrou.places.GooglePlaces;
+import se.walkercrou.places.Param;
+import se.walkercrou.places.Place;
+import se.walkercrou.places.TypeParam;
+import se.walkercrou.places.Types;
+
 
 public class DetailActivity extends ActionBarActivity {
 
+    private static String layoverAirport = null;
+    Double latitude;
+    Double longitude;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +65,48 @@ public class DetailActivity extends ActionBarActivity {
                     .add(R.id.container, new DetailActivityFragment())
                     .commit();
         }
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        /*client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Detail Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.example.android.airfarescanner/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);*/
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        /*Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Detail Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.example.android.airfarescanner/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();*/
     }
 
 
@@ -70,8 +138,9 @@ public class DetailActivity extends ActionBarActivity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class DetailActivityFragment extends Fragment {
-        private static final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
+    @SuppressLint("ValidFragment")
+    public  class DetailActivityFragment extends Fragment {
+        private  final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
         public static final String FORECAST_SHARE_HASHTAG = "#SunshineApp";
         private String forecastStr;
 
@@ -105,6 +174,7 @@ public class DetailActivity extends ActionBarActivity {
                 ArrayList<segInfo> seg_info = slice.get(i).getSeg_info();
                 for (int j = 0; j < seg_info.size(); j++) {
                     ArrayList<legInfo> leg = seg_info.get(j).getLeg_info();
+
                     for (int m = 0; m < leg.size(); m++) {
                         LinearLayout lilayout = new LinearLayout(getActivity());
                         lilayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -149,6 +219,7 @@ public class DetailActivity extends ActionBarActivity {
                         departAirport.setText(leg.get(m).getOrigin());
                         lilayout.addView(departAirport);
 
+
                         TextView travelTime = new TextView(getActivity());
                         travelTime.setPadding(2, 2, 100, 2);
                         travelTime.setTextAppearance(getActivity(), android.R.style.TextAppearance_Small);
@@ -167,6 +238,7 @@ public class DetailActivity extends ActionBarActivity {
                         ;
                         arrivalAirport.setPadding(2, 2, 100, 2);
                         arrivalAirport.setText(leg.get(m).getDest());
+                        layoverAirport = arrivalAirport.getText().toString();
                         lilayout.addView(arrivalAirport);
 
                         TextView arrivalTime = new TextView(getActivity());
@@ -176,6 +248,8 @@ public class DetailActivity extends ActionBarActivity {
 
                         reLayout.addView(lilayout);
                         count++;
+                        latitude = leg.get(m).getDestLatitude();
+                        longitude = leg.get(m).getDestLongitude();
                     }
                     int connection = seg_info.get(j).getConnectionDuration();
                     if (connection > 0) {
@@ -183,6 +257,41 @@ public class DetailActivity extends ActionBarActivity {
                         String connection_Duration = (connection / 60) + " h " + (connection % 60) + " m\n";
                         connectionDuration.setText(connection_Duration);
                         reLayout.addView(connectionDuration);
+
+
+                    }
+                    if ((connection/60) >= 5 || connection == 0) {
+                        Button b = new Button(getActivity());
+                        b.setText("Near by Restaurants and Hotels");
+                        /*b.setTag(latitude + "," +longitude);*/
+                        b.setTag(R.id.latitude, latitude);
+                        b.setTag(R.id.longitude, longitude);
+                        b.setTag(R.id.airport, layoverAirport);
+                        b.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                try {
+
+                                    Log.e(LOG_TAG, latitude + " "+ longitude);
+
+                                    FetchAirFareTask airfareTask =
+                                            new FetchAirFareTask(Double.parseDouble(v.getTag(R.id.latitude).toString()),
+                                                    Double.parseDouble(v.getTag(R.id.longitude).toString()),
+                                                    v.getTag(R.id.airport).toString());
+                                    airfareTask.execute();
+
+
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+
+                            }
+                        });
+                        reLayout.addView(b);
+
                     }
 
                 }
@@ -238,4 +347,80 @@ public class DetailActivity extends ActionBarActivity {
         moveTaskToBack(true);
         DetailActivity.this.finish();
     }*/
+     class FetchAirFareTask extends AsyncTask<String, Void, placeDetails> {
+        double latitude;
+        double longitude;
+        String airport;
+        private ProgressDialog progress;
+
+        public FetchAirFareTask(double latitude, double longitude, String airport) {
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.airport = airport;
+            progress = new ProgressDialog(DetailActivity.this);
+
+        }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progress.setMessage("Fetching Data... Please Wait");
+            progress.show();
+            progress.setCancelable(false);
+
+        }
+
+       @Override
+       protected placeDetails doInBackground(String... params) {
+           ArrayList<HotelsRestaurants> hotelsRestaurants = new ArrayList<HotelsRestaurants>();
+           Log.e("on backround", "executing");
+           GooglePlaces google = new GooglePlaces("AIzaSyAghJ8eCrnOykZ3FOOmx5EyDYYU8V8tCao");
+            Log.e("created key", "yes");
+           List<Place> places;
+           try {
+               places = google.getNearbyPlaces(latitude, longitude, 30000, 50, Param.name("types").value(Types.TYPE_RESTAURANT));
+               Log.e("Places Size", "" + places.size());
+               for (Place place : places) {
+
+                   hotelsRestaurants.add(new HotelsRestaurants(place.getName(), place.getAddress(), place.getRating(), place.getLatitude(), place.getLongitude(), "Restaurant", place.getIconUrl()));
+               }
+           } catch (Exception e) {
+               e.printStackTrace();
+           }
+           try {
+               places = google.getNearbyPlaces(latitude, longitude, 30000, 50, Param.name("types").value(Types.TYPE_LODGING));
+               for (Place place : places) {
+                   double rating = place.getRating();
+                   if (rating < 0){
+                       rating = 0;
+                   }
+                   hotelsRestaurants.add(new HotelsRestaurants(place.getName(), place.getAddress(), rating, place.getLatitude(), place.getLongitude(), "Hotel", place.getIconUrl()));
+               }
+           } catch (Exception e) {
+            e.printStackTrace();
+           }
+           placeDetails pd = new placeDetails(latitude, longitude, hotelsRestaurants, airport);
+
+
+
+            return pd;
+        }
+        @Override
+        protected  void onPostExecute(placeDetails pd) {
+            super.onPostExecute(pd);
+            if(progress.isShowing())
+                progress.dismiss();
+
+            Intent intent = new Intent(DetailActivity.this, MapsMainActivity.class);
+            intent.putExtra("HotelsRes", pd);
+            startActivity(intent);
+        }
+
+    }
+        /*@Override
+        protected void onPostExecute() {
+            super.onpos
+            super.onPostExecute();
+
+
+        }*/
 }

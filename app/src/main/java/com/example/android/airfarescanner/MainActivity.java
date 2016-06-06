@@ -110,6 +110,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String JsonToParse;
     Button search;
     public static final String LOG_TAG = "AirFareScanner";
+    HashMap<String, Double> latMap = new HashMap<String, Double>();
+    HashMap<String, Double> lonMap = new HashMap<String, Double>();
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -146,8 +149,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.e(LOG_TAG,String.valueOf(Airports.size()));
         List<String> airports_Names = new ArrayList<String>();
         for(AirportClass a : Airports) {
-            if (a.getName() !=null && !a.getName().isEmpty())
-                airports_Names.add(a.getCity() + " - " +a.getAirport_code());
+            if (a.getName() !=null && !a.getName().isEmpty()) {
+                airports_Names.add(a.getCity() + " - " + a.getAirport_code());
+                latMap.put(a.getAirport_code(), Double.parseDouble(a.getLatitude()));
+                lonMap.put(a.getAirport_code(), Double.parseDouble(a.getLongitude()));
+
+            }
         }
         Log.e(LOG_TAG,String.valueOf(airports_Names));
         Clear=(Button)findViewById(R.id.button1);
@@ -418,7 +425,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
+        /*client.connect();
         Action viewAction = Action.newAction(
                 Action.TYPE_VIEW, // TODO: choose an action type.
                 "Main Page", // TODO: Define a title for the content shown.
@@ -429,7 +436,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // TODO: Make sure this auto-generated app URL is correct.
                 Uri.parse("android-app://com.example.android.airfarescanner/http/host/path")
         );
-        AppIndex.AppIndexApi.start(client, viewAction);
+        AppIndex.AppIndexApi.start(client, viewAction);*/
     }
 
     @Override
@@ -438,7 +445,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
+        /*Action viewAction = Action.newAction(
                 Action.TYPE_VIEW, // TODO: choose an action type.
                 "Main Page", // TODO: Define a title for the content shown.
                 // TODO: If you have web page content that matches this app activity's content,
@@ -449,13 +456,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Uri.parse("android-app://com.example.android.airfarescanner/http/host/path")
         );
         AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
+        client.disconnect();*/
     }
 
     class FetchAirFareTask extends AsyncTask<String, Void, ArrayList<tripPojo>> {
         public static final String LOG_TAG = "fetchairfaretask";
 
         private ProgressDialog progress;
+
+
+
+
+
+
+
         public FetchAirFareTask(MainActivity activity) {
             progress = new ProgressDialog(activity);
         }
@@ -465,6 +479,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         protected void onPreExecute() {
             progress.setMessage("Fetching Data... Please Wait");
             progress.show();
+            progress.setCancelable(false);
 
             Log.d(LOG_TAG, "onPreExecute called");
         }
@@ -628,6 +643,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 String dest = leg.get(l).getDestination();
                                 lInfo.setDest(dest);
                                 System.out.println("Destination " + dest);
+                                lInfo.setDestLatitude(latMap.get(dest));
+                                lInfo.setDestLongitude(lonMap.get(dest));
                                 String destTer = leg.get(l).getDestinationTerminal();
                                 lInfo.setDestTer(destTer);
                                 System.out.println("DestTer " + destTer);
