@@ -5,9 +5,11 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
 import android.util.Log;
@@ -274,7 +276,11 @@ public class AirFareScannerFragment extends Fragment implements View.OnClickList
                     Toast.makeText(getActivity(), "Please select Departure Date", Toast.LENGTH_LONG).show();
                 else {
                     searchObject = new searchPojo(from, to, departDate, arriveDate, adult, children, cabin);
-                    FetchAirFareTask airfareTask = new FetchAirFareTask();
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    String currency = prefs.getString(getString(R.string.pref_currency_key),
+                            getString(R.string.pref_currency_us));
+                    Log.e("Selected Currency", currency );
+                    FetchAirFareTask airfareTask = new FetchAirFareTask(currency);
                     airfareTask.execute();
 
                 }
@@ -424,6 +430,7 @@ public class AirFareScannerFragment extends Fragment implements View.OnClickList
         public static final String LOG_TAG = "fetchairfaretask";
 
         private ProgressDialog progress;
+        private String saleCountry;
 
 
 
@@ -431,7 +438,9 @@ public class AirFareScannerFragment extends Fragment implements View.OnClickList
 
 
 
-        public FetchAirFareTask() {
+        public FetchAirFareTask(String country) {
+
+            saleCountry = country;
             progress = new ProgressDialog(getActivity());
         }
 
@@ -457,7 +466,7 @@ public class AirFareScannerFragment extends Fragment implements View.OnClickList
             String APPLICATION_NAME = "MyFlightApplication";
             final String API_KEY = "";
             HttpTransport httpTransport;
-            String saleCountry = "US";
+/*            String saleCountry = "US";*/
             JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
             try {
                 //httpTransport = GoogleNetHttpTransport.newTrustedTransport();
