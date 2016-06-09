@@ -39,5 +39,20 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="pref_currency_label">Currency Country</string>
+    <string name="pref_currency_key" translatable="false">currency</string>
+    <string name="pref_currency_label_us">USA</string>
+    <string name="pref_currency_label_in">INDIA</string>
+    <string name="pref_currency_label_au">AUSTRALIA</string>
+    <string name="pref_currency_label_uk">UK</string>
+    <string name="pref_currency_us" translatable="false">US</string>
+    <string name="pref_currency_in" translatable="false">IN</string>
+    <string name="pref_currency_au" translatable="false">AU</string>
+    <string name="pref_currency_uk" translatable="false">GB</string>
+
+
+
+
+
 </resources>
 
