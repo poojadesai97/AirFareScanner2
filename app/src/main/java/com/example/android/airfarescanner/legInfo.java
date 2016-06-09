@@ -16,6 +16,8 @@ public class legInfo  implements Serializable {
     String durationLeg;
     String mil;
     String originToDestination;
+    Double destLatitude;
+    Double destLongitude;
 
     public String getOriginToDestination() {
         return originToDestination;
@@ -95,5 +97,21 @@ public class legInfo  implements Serializable {
 
     public void setMil(String mil) {
         this.mil = mil;
+    }
+
+    public Double getDestLatitude() {
+        return destLatitude;
+    }
+
+    public void setDestLatitude(Double destLatitude) {
+        this.destLatitude = destLatitude;
+    }
+
+    public Double getDestLongitude() {
+        return destLongitude;
+    }
+
+    public void setDestLongitude(Double destLongitude) {
+        this.destLongitude = destLongitude;
     }
 }

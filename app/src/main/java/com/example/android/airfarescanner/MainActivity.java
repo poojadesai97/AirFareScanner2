@@ -13,10 +13,15 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Parcelable;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,6 +32,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -79,7 +85,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class MainActivity extends Activity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText departDatetxt;
     private EditText arriveDatetxt;
 
@@ -101,6 +107,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private String JsonToParse;
     Button search;
     public static final String LOG_TAG = "AirFareScanner";
+    HashMap<String, Double> latMap = new HashMap<String, Double>();
+    HashMap<String, Double> lonMap = new HashMap<String, Double>();
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -110,11 +119,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
 
 
-        setContentView(R.layout.activity_main);
+      //  setContentView(R.layout.activity_main);
 
         JsonToParse = readJson();
 
@@ -133,8 +145,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
         Log.e(LOG_TAG,String.valueOf(Airports.size()));
         List<String> airports_Names = new ArrayList<String>();
         for(AirportClass a : Airports) {
-            if (a.getName() !=null && !a.getName().isEmpty())
-                airports_Names.add(a.getCity() + " - " +a.getAirport_code());
+            if (a.getName() !=null && !a.getName().isEmpty()) {
+                airports_Names.add(a.getCity() + " - " + a.getAirport_code());
+                latMap.put(a.getAirport_code(), Double.parseDouble(a.getLatitude()));
+                lonMap.put(a.getAirport_code(), Double.parseDouble(a.getLongitude()));
+
+            }
         }
         Log.e(LOG_TAG,String.valueOf(airports_Names));
         Clear=(Button)findViewById(R.id.button1);
@@ -173,6 +189,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         ArrayAdapter<String> adapterNames = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,airports_Names);
         fromAirport.setAdapter(adapterNames);
+        fromAirport.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.e(LOG_TAG, parent.getItemAtPosition(position).toString());
+                String fromCityCode [] = parent.getItemAtPosition(position).toString().split(" - ");
+                fromAirport.setText(fromCityCode[1]);
+            }
+        });
         //fromAirport.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
 
 
@@ -180,6 +204,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
         toAirport = (AutoCompleteTextView) findViewById(R.id.toAirport);
         ArrayAdapter<String> adapterto = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,airports_Names);
         toAirport.setAdapter(adapterto);
+        toAirport.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.e(LOG_TAG, parent.getItemAtPosition(position).toString());
+                String toCityCode [] = parent.getItemAtPosition(position).toString().split(" - ");
+                toAirport.setText(toCityCode[1]);
+            }
+        });
         //toAirport.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
 
         adultsCount = (Spinner) findViewById(R.id.adultsCount);
@@ -227,7 +259,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             @Override
             public void onClick(View view) {
                 String from = fromAirport.getText().toString();
-                String to = toAirport.getText().toString();
+                String to= toAirport.getText().toString();
                 String arriveDate = arriveDatetxt.getText().toString();
                 String departDate = departDatetxt.getText().toString();
                 int adult = Integer.parseInt(adultsCount.getSelectedItem().toString());
@@ -264,6 +296,31 @@ public class MainActivity extends Activity implements View.OnClickListener {
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem item = menu.findItem(R.id.settings);
+        Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
+
+        // Inflate the menu; this adds items to the action bar if it is present.
+
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        if (item.getItemId() == R.id.settings) {
+
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     private void findViewsById() {
         departDatetxt = (EditText) findViewById(R.id.departDateText);
@@ -364,7 +421,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
+        /*client.connect();
         Action viewAction = Action.newAction(
                 Action.TYPE_VIEW, // TODO: choose an action type.
                 "Main Page", // TODO: Define a title for the content shown.
@@ -375,7 +432,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 // TODO: Make sure this auto-generated app URL is correct.
                 Uri.parse("android-app://com.example.android.airfarescanner/http/host/path")
         );
-        AppIndex.AppIndexApi.start(client, viewAction);
+        AppIndex.AppIndexApi.start(client, viewAction);*/
     }
 
     @Override
@@ -384,7 +441,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
+        /*Action viewAction = Action.newAction(
                 Action.TYPE_VIEW, // TODO: choose an action type.
                 "Main Page", // TODO: Define a title for the content shown.
                 // TODO: If you have web page content that matches this app activity's content,
@@ -395,13 +452,20 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 Uri.parse("android-app://com.example.android.airfarescanner/http/host/path")
         );
         AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
+        client.disconnect();*/
     }
 
     class FetchAirFareTask extends AsyncTask<String, Void, ArrayList<tripPojo>> {
         public static final String LOG_TAG = "fetchairfaretask";
 
         private ProgressDialog progress;
+
+
+
+
+
+
+
         public FetchAirFareTask(MainActivity activity) {
             progress = new ProgressDialog(activity);
         }
@@ -411,6 +475,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         protected void onPreExecute() {
             progress.setMessage("Fetching Data... Please Wait");
             progress.show();
+            progress.setCancelable(false);
 
             Log.d(LOG_TAG, "onPreExecute called");
         }
@@ -574,6 +639,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
                                 String dest = leg.get(l).getDestination();
                                 lInfo.setDest(dest);
                                 System.out.println("Destination " + dest);
+                                lInfo.setDestLatitude(latMap.get(dest));
+                                lInfo.setDestLongitude(lonMap.get(dest));
                                 String destTer = leg.get(l).getDestinationTerminal();
                                 lInfo.setDestTer(destTer);
                                 System.out.println("DestTer " + destTer);
