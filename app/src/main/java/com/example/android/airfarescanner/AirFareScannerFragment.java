@@ -272,6 +272,9 @@ public class AirFareScannerFragment extends Fragment implements View.OnClickList
                     Toast.makeText(getActivity(), "Invalid Detination Airport ", Toast.LENGTH_LONG).show();
                 else if (departDate.isEmpty())
                     Toast.makeText(getActivity(), "Please select Departure Date", Toast.LENGTH_LONG).show();
+                else if ((adult + children) > 9) {
+                    Toast.makeText(getActivity(), "Upto 9 Passsengers at a time", Toast.LENGTH_LONG).show();
+                }
                 else {
                     searchObject = new searchPojo(from, to, departDate, arriveDate, adult, children, cabin);
                     FetchAirFareTask airfareTask = new FetchAirFareTask();

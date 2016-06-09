@@ -25,7 +25,61 @@
             app:popupTheme="@style/AppTheme.PopupOverlay"
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
+
+
             xmlns:tools="http://schemas.android.com/tools"/>-->
+
+
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            >
+
+            <AutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/fromAirport"
+
+                android:hint="@string/hint_from"
+                 />
+
+
+            <!--<EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/fromAirport"
+
+                android:hint="@string/hint_from"/>-->
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_below="@+id/input_layout_1"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+
+
+            <AutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/toAirport"
+
+                android:hint="@string/hint_to"
+                />
+           <!--
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/toAirport"
+
+                android:hint="@string/hint_to"/>-->
+        </android.support.design.widget.TextInputLayout>
+<!--
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -78,8 +132,54 @@
                 android:layout_alignParentEnd="true" />
 
         </LinearLayout>
+-->
 
-        <LinearLayout
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/input_layout_4"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+            <EditText
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:inputType="date"
+                android:ems="10"
+                android:focusable="false"
+                android:id="@+id/departDateText"
+                android:hint="@string/hint_depart"
+
+                android:layout_alignBottom="@+id/input_layout_4"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+        </android.support.design.widget.TextInputLayout>
+
+
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_4"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/input_layout_2"
+            android:layout_marginTop="39dp"
+            android:layout_alignRight="@+id/input_layout_2"
+            android:layout_alignEnd="@+id/input_layout_2" >
+            <EditText
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:inputType="date"
+                android:ems="10"
+                android:focusable="false"
+                android:hint="@string/hint_arrive"
+                android:id="@+id/arriveDateText"
+                android:layout_below="@+id/input_layout_2"
+                android:layout_marginTop="39dp"
+                android:layout_alignRight="@+id/input_layout_2"
+                android:layout_alignEnd="@+id/input_layout_2" />
+        </android.support.design.widget.TextInputLayout>
+
+       <!-- <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/linearLayout1"
@@ -148,27 +248,26 @@
                 android:background="@drawable/cross" />
 
         </LinearLayout>
+-->
 
-        <View
-            android:id="@+id/SplitLine_hor1"
-            android:layout_width="match_parent"
-            android:layout_height= "2dp"
-            android:background="#343D39"
-            android:layout_below="@+id/linearLayout3"
 
-            />
+
+
+
+
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/linearLayout3"
             android:id="@+id/linearLayout"
             android:paddingTop="20dp"
+            android:weightSum="1"
+            android:layout_above="@+id/nameOfClass"
+            android:layout_marginBottom="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignLeft="@+id/linearLayout3"
-            android:layout_alignStart="@+id/linearLayout3"
-            android:weightSum="1">
+            android:layout_alignParentEnd="true">
             <TextView
                 android:layout_width="70dp"
                 android:layout_height="wrap_content"
@@ -234,8 +333,10 @@
             android:scaleY="0.80"
             android:textAlignment="center"
             android:singleLine="false"
-            android:layout_below="@+id/linearLayout"
-            android:layout_marginTop="26dp" />
+            android:layout_marginTop="24dp"
+            android:layout_alignTop="@+id/spinner"
+            android:layout_alignLeft="@+id/linearLayout"
+            android:layout_alignStart="@+id/linearLayout" />
 
         <Spinner
             android:layout_width="200dp"
@@ -243,21 +344,141 @@
             android:id="@+id/spinner"
             android:textStyle="bold"
             android:spinnerMode="dropdown"
-            android:layout_below="@+id/linearLayout"
-            android:layout_toRightOf="@+id/nameOfClass"
-            />
+            android:layout_marginBottom="22dp"
+            android:layout_above="@+id/button"
+            android:layout_alignRight="@+id/linearLayout"
+            android:layout_alignEnd="@+id/linearLayout" />
 
         <Button
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Search"
             android:textStyle="bold"
             android:id="@+id/button"
             android:gravity="center"
-            android:background="@drawable/search1"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="60dp" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/cross"
+            android:layout_alignBottom="@+id/input_layout_3"
+            android:layout_alignLeft="@+id/spinner"
+            android:layout_alignStart="@+id/spinner"
+            android:layout_marginBottom="10dp" />
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/cross"
+            android:layout_alignTop="@+id/button2"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <!--     <LinearLayout
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_below="@+id/linearLayout3"
+                 android:id="@+id/linearLayout"
+                 android:paddingTop="20dp"
+                 android:layout_alignParentRight="true"
+                 android:layout_alignParentEnd="true"
+                 android:layout_alignLeft="@+id/linearLayout3"
+                 android:layout_alignStart="@+id/linearLayout3"
+                 android:weightSum="1">
+                 <TextView
+                     android:layout_width="70dp"
+                     android:layout_height="wrap_content"
+                     android:textAppearance="?android:attr/textAppearanceMedium"
+                     android:text="Adults"
+                     android:textStyle="bold"
+                     android:id="@+id/numberAdults"
+                     android:scaleX="0.80"
+                     android:scaleY="0.80"
+
+                     android:singleLine="false"
+                     android:layout_alignParentLeft="true"
+                     android:layout_alignParentStart="true" />
+                 <Spinner
+                     android:layout_width="75dp"
+                     android:layout_height="30dp"
+                     android:id="@+id/adultsCount"
+                     android:textStyle="bold"
+                     android:spinnerMode="dropdown"
+                     android:layout_toRightOf="@+id/numberAdults"
+                     />
+
+                 <View
+                     android:id="@+id/SplitLine_vert1"
+                     android:layout_width="2dp"
+                     android:layout_height= "40dp"
+                     android:background="#343D39"
+                     android:layout_marginRight="10dp"
+                     android:layout_marginLeft="10dp"
+
+                     />
+                 <TextView
+                     android:layout_width="70dp"
+                     android:layout_height="wrap_content"
+                     android:textAppearance="?android:attr/textAppearanceMedium"
+                     android:text="Children"
+                     android:textStyle="bold"
+                     android:id="@+id/numberChild"
+                     android:scaleX="0.80"
+                     android:scaleY="0.80"
+                     android:singleLine="true"
+                     />
+
+                 <Spinner
+                     android:layout_width="75dp"
+                     android:layout_height="30dp"
+                     android:id="@+id/childCount"
+                     android:textStyle="bold"
+                     android:spinnerMode="dropdown"
+                     android:layout_toRightOf="@+id/numberChild" />
+
+
+             </LinearLayout>
+
+             <TextView
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:textAppearance="?android:attr/textAppearanceMedium"
+                 android:text="Class"
+                 android:textStyle="bold"
+                 android:id="@+id/nameOfClass"
+                 android:scaleX="0.80"
+                 android:scaleY="0.80"
+                 android:textAlignment="center"
+                 android:singleLine="false"
+                 android:layout_below="@+id/linearLayout"
+                 android:layout_marginTop="26dp" />
+
+             <Spinner
+                 android:layout_width="200dp"
+                 android:layout_height="80dp"
+                 android:id="@+id/spinner"
+                 android:textStyle="bold"
+                 android:spinnerMode="dropdown"
+                 android:layout_below="@+id/linearLayout"
+                 android:layout_toRightOf="@+id/nameOfClass"
+                 />
+
+             <Button
+                 android:layout_width="40dp"
+                 android:layout_height="40dp"
+
+                 android:textStyle="bold"
+                 android:id="@+id/button"
+                 android:gravity="center"
+                 android:background="@drawable/search1"
+                 android:layout_alignParentBottom="true"
+                 android:layout_centerHorizontal="true"
+                 android:layout_marginBottom="60dp" />-->
 
 
     </RelativeLayout>
