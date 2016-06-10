@@ -36,6 +36,9 @@
         android:clickable="false"
         android:focusableInTouchMode="false"
         android:focusable="false"
-        android:isIndicator="true"/>
+        android:isIndicator="true"
+        android:progressBackgroundTint="#D3D3D3"
+
+        />
 
 </LinearLayout>

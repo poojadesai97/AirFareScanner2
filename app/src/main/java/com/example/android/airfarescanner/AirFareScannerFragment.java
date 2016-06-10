@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -189,6 +190,9 @@ public class AirFareScannerFragment extends Fragment implements View.OnClickList
                 Log.e(LOG_TAG, parent.getItemAtPosition(position).toString());
                 String fromCityCode [] = parent.getItemAtPosition(position).toString().split(" - ");
                 fromAirport.setText(fromCityCode[1]);
+                InputMethodManager in = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                in.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                in.hideSoftInputFromWindow(view.getApplicationWindowToken(), 0);
             }
         });
         //fromAirport.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
@@ -204,6 +208,9 @@ public class AirFareScannerFragment extends Fragment implements View.OnClickList
                 Log.e(LOG_TAG, parent.getItemAtPosition(position).toString());
                 String toCityCode [] = parent.getItemAtPosition(position).toString().split(" - ");
                 toAirport.setText(toCityCode[1]);
+                InputMethodManager in = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                in.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                in.hideSoftInputFromWindow(view.getApplicationWindowToken(), 0);
             }
         });
         //toAirport.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
