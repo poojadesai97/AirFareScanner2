@@ -141,8 +141,7 @@ public class DetailActivity extends ActionBarActivity {
     @SuppressLint("ValidFragment")
     public  class DetailActivityFragment extends Fragment {
         private  final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
-        public static final String FORECAST_SHARE_HASHTAG = "#SunshineApp";
-        private String forecastStr;
+
 
         public DetailActivityFragment() {
             setHasOptionsMenu(true);
@@ -373,6 +372,7 @@ public class DetailActivity extends ActionBarActivity {
        protected placeDetails doInBackground(String... params) {
            ArrayList<HotelsRestaurants> hotelsRestaurants = new ArrayList<HotelsRestaurants>();
            Log.e("on backround", "executing");
+           //Citation : Github. GooglePlaces is a library
            GooglePlaces google = new GooglePlaces("AIzaSyAghJ8eCrnOykZ3FOOmx5EyDYYU8V8tCao");
             Log.e("created key", "yes");
            List<Place> places;

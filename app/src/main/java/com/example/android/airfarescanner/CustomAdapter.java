@@ -87,6 +87,7 @@ public class CustomAdapter extends ArrayAdapter {
         if (item.getSlice_info().get(i).getSeg_info().get(0).getFlightCarrierCode() != null)
             url = "http://pics.avs.io/100/100/"+item.getSlice_info().get(i).getSeg_info().get(0).getFlightCarrierCode().toUpperCase()+".png";
         Log.e("URL", item.getSlice_info().get(i).getSeg_info().get(0).getFlightCarrierCode().toUpperCase());
+        // Citation: Github. Its a library to display the image.
         UrlImageViewHelper.setUrlDrawable(view.deImg, url);
 
         if (item.getSlice_info().size() > 1) {

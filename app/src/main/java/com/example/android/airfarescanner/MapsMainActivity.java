@@ -37,13 +37,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+//Citation : www.numetriclabz.com. Just for reference
 public class MapsMainActivity extends AppCompatActivity {
     private SlidingUpPanelLayout mLayout;
     private static final String TAG = "MainAcitvity";
     List<String> array_list;
     //TextView textView ;
     ListView listview;
-    static final LatLng TutorialsPoint = new LatLng(21 , 57);
     private GoogleMap googleMap;
     placeDetails pd;
     Marker marker;
@@ -93,10 +93,10 @@ public class MapsMainActivity extends AppCompatActivity {
     public void init(){
 
         mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
-        mLayout.setScrollableView(findViewById(R.id.list));
+        mLayout.setScrollableView(findViewById(R.id.placeList));
 
         //textView = (TextView) findViewById(R.id.list_main);
-        listview = (ListView) findViewById(R.id.list);
+        listview = (ListView) findViewById(R.id.placeList);
 
     }
 
@@ -133,7 +133,7 @@ public class MapsMainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public View getInfoContents(Marker marker) {
+                    public View getInfoContents(Marker  marker) {
 
 
                         View v = getLayoutInflater().inflate(R.layout.info_window, null);
@@ -144,7 +144,7 @@ public class MapsMainActivity extends AppCompatActivity {
                         TextView type = (TextView) v.findViewById(R.id.placeType);
                         if (marker.getSnippet().equals("Distance")) {
 
-                            distance.setText("Distance(KM) : " + CalculationByDistance(airport.getPosition(), place));
+                            distance.setText("Distance : " + CalculationByDistance(airport.getPosition(), place) + " Km");
                             name.setText(map.getName());
                             rating.setRating(map.getRating().floatValue());
                             address.setText(map.getAddress());
@@ -237,7 +237,7 @@ public class MapsMainActivity extends AppCompatActivity {
         ArrayList<String> arrayList = new ArrayList<String>();
         for(HotelsRestaurants hotelsRestaurants : pd.getHr() ) {
             arrayList.add(hotelsRestaurants.getName() + " - " + hotelsRestaurants.getType()
-            +"\n" +hotelsRestaurants.getRating());
+            +"\n Rating : " +hotelsRestaurants.getRating());
         }
         return arrayList;
     }
@@ -252,6 +252,7 @@ public class MapsMainActivity extends AppCompatActivity {
             super.onBackPressed();
         /*}*/
     }
+    //Citation : github
     public double CalculationByDistance(LatLng StartP, LatLng EndP) {
         int Radius = 6371;// radius of earth in Km
         double lat1 = StartP.latitude;

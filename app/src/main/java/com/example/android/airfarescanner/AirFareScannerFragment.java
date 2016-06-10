@@ -124,6 +124,7 @@ public class AirFareScannerFragment extends Fragment implements View.OnClickList
         JsonToParse = readJson();
 
         try {
+            //Citation : Github. This is libaray which is faster than JSON and GSON
             Airports = LoganSquare.parseList(JsonToParse, AirportClass.class);
             //for(int i=0;i<Airports.size();i++){
             // Log.d(LOG_TAG,"Airports" + Airports);
@@ -465,7 +466,7 @@ public class AirFareScannerFragment extends Fragment implements View.OnClickList
 
             // adding each child node to HashMap key => value
 
-
+            // Citation : Stack Overflow
             String APPLICATION_NAME = "MyFlightApplication";
             final String API_KEY = "";
             HttpTransport httpTransport;
