@@ -32,6 +32,10 @@
         android:layout_gravity="center_horizontal"
         android:numStars="5"
         android:scaleX="0.5"
-        android:scaleY="0.5"/>
+        android:scaleY="0.5"
+        android:clickable="false"
+        android:focusableInTouchMode="false"
+        android:focusable="false"
+        android:isIndicator="true"/>
 
 </LinearLayout>
