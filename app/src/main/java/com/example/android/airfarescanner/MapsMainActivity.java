@@ -176,12 +176,10 @@ public class MapsMainActivity extends AppCompatActivity {
         // This is the array adapter, it takes the context of the activity as a
         // first parameter, the type of list view as a second parameter and your
         // array as a third parameter.
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                this,
-                android.R.layout.simple_list_item_1,
-                array_list());
+        CustomPlaceAdaper adapter = new CustomPlaceAdaper(getApplicationContext(),R.layout.place_contents, pd.getHr());
 
-        listview.setAdapter(arrayAdapter);
+
+        listview.setAdapter(adapter);
     }
 
     /**

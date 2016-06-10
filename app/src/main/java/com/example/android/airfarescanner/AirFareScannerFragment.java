@@ -505,7 +505,7 @@ public class AirFareScannerFragment extends Fragment implements View.OnClickList
                 TripsSearchRequest parameters = new TripsSearchRequest();
                 parameters.setRequest(request);
                 QPXExpress qpXExpress = new QPXExpress.Builder(httpTransport, JSON_FACTORY, null).setApplicationName(APPLICATION_NAME)
-                        .setGoogleClientRequestInitializer(new QPXExpressRequestInitializer("AIzaSyDOU4p-DF9EB6tYKo4-KGRubiYdA76W2h4")).build();
+                        .setGoogleClientRequestInitializer(new QPXExpressRequestInitializer("AIzaSyDrXTMZ28U5N57UrfdE8l8QddQjuHF5KvE")).build();
 
                 TripsSearchResponse list = qpXExpress.trips().search(parameters).execute();
 
